@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/views/category_screen.dart';
+import 'package:waiter_app_demo/views/table_screen.dart';
 
 class FloorDetailCard extends StatefulWidget{
   var floorName;
@@ -75,6 +77,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
                       debugPrint("Butona tıklandı");
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>TableScreen()));
                     },
                     iconSize: 24,
                   ),
