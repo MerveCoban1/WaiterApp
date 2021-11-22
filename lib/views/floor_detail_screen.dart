@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/widgets/floor_detail_card.dart';
 
 class FloorDetailScreen extends StatefulWidget {
+  var floorId;
   var floorName;
+  Session session;
 
-  FloorDetailScreen(this.floorName);
-
+  FloorDetailScreen(this.floorId,this.floorName,this.session);
   @override
   State<FloorDetailScreen> createState() => _FloorDetailScreenState();
 }
 
 class _FloorDetailScreenState extends State<FloorDetailScreen> {
+  var tableList=[];
+  InAppService apiManagerInAppService=InAppService();
+
+  @override
+  void initState() {
+    super.initState();
+    getAllTables();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,13 +52,11 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
             width: (MediaQuery.of(context).size.height),
             height: (MediaQuery.of(context).size.height),
             color: Colors.white,
-            child: ListView(
-              children: [
-                FloorDetailCard("1.masa"),
-                FloorDetailCard("1.masa"),
-                FloorDetailCard("1.masa"),
-                FloorDetailCard("1.masa"),
-              ],
+            child: ListView.builder(
+              itemCount: tableList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return FloorDetailCard("1.masa");
+              }
             ),
           ),
         ),
@@ -68,6 +78,17 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
         },
       ),
     );
+  }
+
+  void getAllTables() async{
+    var tableListComing=await apiManagerInAppService.fetchTableBySectionId(widget.session.refreshToken.toString(),widget.session.accessToken.toString(),widget.floorId);
+    if(tableListComing.isEmpty){
+      print("hata");
+    }else{
+      setState(() {
+        tableList=tableListComing;
+      });
+    }
   }
 
 }

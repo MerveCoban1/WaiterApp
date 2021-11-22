@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/services/auth_service.dart';
 import 'forgot_password_screen.dart';
 import 'home_screen.dart';
 
@@ -11,11 +13,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  late Session session;
+  AuthService apiManager=AuthService();
   final GlobalKey<ScaffoldState> key=GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key:key,
         backgroundColor: Colors.white,
         body: buildSingleChildScrollView(context)
     );
@@ -134,8 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Center(
                         child: InkWell(
                           onTap: (){
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                            login();
                           },
                           child: Text("Giriş Yap", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
                         ),
@@ -159,6 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async{
-    //Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+    session=await apiManager.loginUser(nameController.text.toString(), passwordController.text.toString());
+    if(session.accessToken=="Hata"){
+      key.currentState!.showSnackBar(SnackBar(content: Text("${session.refreshToken.toString()}")));
+    }else{
+      Navigator.of(context).pop();
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(session)));
+    }
   }
 }

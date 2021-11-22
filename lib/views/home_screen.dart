@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session.dart';
 import 'package:waiter_app_demo/views/floors_screen.dart';
 import 'package:waiter_app_demo/views/orders_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  Session session;
+  HomeScreen(this.session);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -11,15 +14,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _contents = [];
   int _activeContentNo = 0;
 
+  final GlobalKey<ScaffoldState> key=GlobalKey();
+
   @override
   void initState() {
     super.initState();
-    _contents=[FloorsScreen(),OrdersScreen()];
+    _contents=[FloorsScreen(widget.session),OrdersScreen()];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       backgroundColor: Color.fromRGBO(143, 148, 251, 1),
       appBar: buildAppBar(context),
       body: _contents[_activeContentNo],
