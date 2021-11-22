@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session.dart';
 import 'package:waiter_app_demo/views/floor_detail_screen.dart';
 
 class FloorCard extends StatefulWidget{
   var floorName;
-
-  FloorCard(this.floorName);
+  var floorId;
+  Session session;
+  FloorCard(this.floorName,this.floorId,this.session);
 
   @override
   _FloorCardState createState() => _FloorCardState();
@@ -14,7 +16,7 @@ class _FloorCardState extends State<FloorCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>FloorDetailScreen("1.Kat")));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>FloorDetailScreen(widget.floorId,widget.floorName,widget.session)));
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 10.0),
@@ -42,7 +44,7 @@ class _FloorCardState extends State<FloorCard> {
             child: Text(
               widget.floorName,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 15.0,
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(143, 158, 191, 1),
               ),
