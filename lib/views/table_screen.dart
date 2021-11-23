@@ -5,6 +5,10 @@ import 'package:waiter_app_demo/views/product_screen.dart';
 import 'order_detail_screen.dart';
 
 class TableScreen extends StatefulWidget {
+  var session;
+  var floorName;
+  var floorId;
+  TableScreen();
   @override
   State<TableScreen> createState() => _TableScreenState();
 }
