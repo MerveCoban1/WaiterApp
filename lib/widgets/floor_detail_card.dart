@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/table_screen.dart';
 
 class FloorDetailCard extends StatefulWidget{
   TableModel tableModel;
-  FloorDetailCard(this.tableModel);
+  SessionModel sessionModel;
+  FloorDetailCard(this.tableModel,this.sessionModel);
 
   @override
   _FloorDetailCardState createState() => _FloorDetailCardState();
@@ -88,7 +90,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.play_arrow_sharp),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>TableScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>TableScreen(widget.tableModel,widget.sessionModel)));
                     },
                     iconSize: 24,
                   ),

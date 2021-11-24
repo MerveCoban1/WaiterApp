@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/category_screen.dart';
-import 'package:waiter_app_demo/views/product_screen.dart';
-
-import 'order_detail_screen.dart';
+import 'package:waiter_app_demo/views/table_detail_screen.dart';
+import 'orders_screen.dart';
 
 class TableScreen extends StatefulWidget {
-  var session;
-  var floorName;
-  var floorId;
-  TableScreen();
+  TableModel tableModel;
+  SessionModel sessionModel;
+  TableScreen(this.tableModel,this.sessionModel);
+
   @override
   State<TableScreen> createState() => _TableScreenState();
 }
@@ -20,7 +21,7 @@ class _TableScreenState extends State<TableScreen> {
   @override
   void initState() {
     super.initState();
-    _contents = [OrderDetail(), Category(), Product()];
+    _contents = [TableDetailScreen(widget.tableModel,widget.sessionModel), Category(), OrdersScreen()];
   }
 
   @override
@@ -43,34 +44,37 @@ class _TableScreenState extends State<TableScreen> {
         backgroundColor: Color.fromRGBO(143, 148, 251, 1),
         elevation: 0.0,
         actions: [
-          Center(
-            child: Text(
-              "0",
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.only(right: 10.0,top:11.0),
             child: Icon(Icons.shopping_cart),
           ),
-        ],
-        title: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              "Salon-6",
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0,top:10.0),
+            child: Center(
+              child: Text(
+                "0",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
+        ],
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0,top: 10.0),
+              child: Text(widget.tableModel.title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -86,15 +90,15 @@ class _TableScreenState extends State<TableScreen> {
       showUnselectedLabels: false,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.doorbell),
+          icon: Icon(Icons.details),
           label: "",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.local_offer_sharp),
+          icon: Icon(Icons.category),
           label: "",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.fastfood_sharp),
+          icon: Icon(Icons.bookmark_border_sharp),
           label: "",
         ),
       ],

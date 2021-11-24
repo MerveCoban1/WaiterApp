@@ -58,7 +58,7 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
               itemCount: tableList.length,
               itemBuilder: (BuildContext context, int index) {
                 tableModel=TableModel.fromJson(tableList[index]);
-                return FloorDetailCard(tableModel);
+                return FloorDetailCard(tableModel,widget.sessionModel);
               }
             ),
           ),

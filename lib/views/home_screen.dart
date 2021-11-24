@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:waiter_app_demo/database/dbHelper.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/views/floors_screen.dart';
-import 'package:waiter_app_demo/views/orders_screen.dart';
+import 'package:waiter_app_demo/views/all_orders_screen.dart';
 
 import 'login_screen.dart';
 
@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState(){
     super.initState();
-    _contents=[FloorsScreen(widget.sessionModel),OrdersScreen()];
+    _contents=[FloorsScreen(widget.sessionModel),AllOrdersScreen()];
   }
 
   @override
