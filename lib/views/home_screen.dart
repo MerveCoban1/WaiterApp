@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app_demo/database/dbHelper.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
-import 'package:waiter_app_demo/utils/user_control.dart';
 import 'package:waiter_app_demo/views/floors_screen.dart';
 import 'package:waiter_app_demo/views/orders_screen.dart';
 
@@ -17,9 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _contents = [];
   int _activeContentNo = 0;
-  UserControl userControl=new UserControl();
-  late SharedPreferences pref;
-  var control;
+  var dbHelper=DbHelper();
 
   final GlobalKey<ScaffoldState> key=GlobalKey();
 
@@ -118,8 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> logout() async {
-    pref = await SharedPreferences.getInstance();
-    pref.setString("email","");
+    print("silme işlemi olcak şimdi");
+    dbHelper.delete(widget.sessionModel.accessToken).then((value) => {
+      print("silme işlemi"),
+      print(value),
+    });
     Navigator.of(context).pop();
     Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
   }

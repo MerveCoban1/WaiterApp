@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app_demo/database/dbHelper.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/services/auth_service.dart';
 import 'forgot_password_screen.dart';
@@ -13,14 +13,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
   late SessionModel sessionModel;
   AuthService apiManager=AuthService();
   final GlobalKey<ScaffoldState> key=GlobalKey();
-  late SharedPreferences pref;
+  var dbHelper=DbHelper();
 
   @override
   void initState() {
+    control();
     super.initState();
   }
   @override
@@ -176,6 +176,21 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pop();
       Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(sessionModel)));
     }
+  }
+
+  Future<void> control() async {
+    var db= await dbHelper.initializeDb();
+    dbHelper.createDb(db, 1);
+    dbHelper.getUser().then((value) => {
+      if(!value.isEmpty){
+        print("demekki silemedi hala"),
+        value[0].accessToken,
+        value[0].refreshToken,
+        sessionModel=value[0],
+        Navigator.of(context).pop(),
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(sessionModel))),
+      },
+    });
   }
 
 }

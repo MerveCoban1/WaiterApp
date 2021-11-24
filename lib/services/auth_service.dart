@@ -1,14 +1,12 @@
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app_demo/database/dbHelper.dart';
 import 'dart:convert';
 import 'package:waiter_app_demo/models/session_model.dart';
 
 class AuthService {
   String url="https://api.digigarson.org/v1/";
-
+  var dbHelper=DbHelper();
   Future<SessionModel> loginUser(String email, String password) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
     SessionModel _sessionModel;
     String path=url+"waiter/signin";
 
@@ -23,9 +21,12 @@ class AuthService {
       }),
     );
     if (response.statusCode == 200) {
-      pref.setString("email", email);
       Map<String, dynamic> map=json.decode(response.body);
       _sessionModel=SessionModel.fromJson(map);
+      dbHelper.insert(_sessionModel).then((value) => {
+        print("veritabanına ekleme sonucu"),
+        print(value),
+      });
       return _sessionModel;
     } else {
       return new SessionModel("Hata", response.body);
