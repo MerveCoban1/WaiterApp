@@ -1,12 +1,15 @@
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
 
 class AuthService {
   String url="https://api.digigarson.org/v1/";
 
-  Future<Session> loginUser(String email, String password) async {
-    Session _session;
+  Future<SessionModel> loginUser(String email, String password) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    SessionModel _sessionModel;
     String path=url+"waiter/signin";
 
     final http.Response response = await http.post(
@@ -20,11 +23,12 @@ class AuthService {
       }),
     );
     if (response.statusCode == 200) {
+      pref.setString("email", email);
       Map<String, dynamic> map=json.decode(response.body);
-      _session=Session.fromJson(map);
-      return _session;
+      _sessionModel=SessionModel.fromJson(map);
+      return _sessionModel;
     } else {
-      return new Session("Hata", response.body);
+      return new SessionModel("Hata", response.body);
     }
   }
 }

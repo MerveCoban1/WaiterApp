@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/models/section_model.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/widgets/floor_detail_card.dart';
 
 class FloorDetailScreen extends StatefulWidget {
-  var floorId;
-  var floorName;
-  Session session;
+  SectionModel sectionModel;
+  SessionModel sessionModel;
 
-  FloorDetailScreen(this.floorId,this.floorName,this.session);
+  FloorDetailScreen(this.sectionModel,this.sessionModel);
   @override
   State<FloorDetailScreen> createState() => _FloorDetailScreenState();
 }
@@ -16,6 +17,7 @@ class FloorDetailScreen extends StatefulWidget {
 class _FloorDetailScreenState extends State<FloorDetailScreen> {
   var tableList=[];
   InAppService apiManagerInAppService=InAppService();
+  late TableModel tableModel;
 
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 25.0, top: 20.0, bottom: 20.0),
           child: Text(
-            widget.floorName,
+            widget.sectionModel.title,
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
@@ -55,7 +57,8 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
             child: ListView.builder(
               itemCount: tableList.length,
               itemBuilder: (BuildContext context, int index) {
-                return FloorDetailCard("1.masa");
+                tableModel=TableModel.fromJson(tableList[index]);
+                return FloorDetailCard(tableModel);
               }
             ),
           ),
@@ -81,7 +84,7 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
   }
 
   void getAllTables() async{
-    var tableListComing=await apiManagerInAppService.fetchTableBySectionId(widget.session.refreshToken.toString(),widget.session.accessToken.toString(),widget.floorId);
+    var tableListComing=await apiManagerInAppService.getTablesBySectionId(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString(),widget.sectionModel.id);
     if(tableListComing.isEmpty){
       print("hata");
     }else{

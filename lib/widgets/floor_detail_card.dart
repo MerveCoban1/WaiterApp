@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/views/category_screen.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/table_screen.dart';
 
 class FloorDetailCard extends StatefulWidget{
-  var floorName;
-
-  FloorDetailCard(this.floorName);
+  TableModel tableModel;
+  FloorDetailCard(this.tableModel);
 
   @override
   _FloorDetailCardState createState() => _FloorDetailCardState();
@@ -38,11 +37,24 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
         child: Row(
           children: [
             Container(
-              width: (MediaQuery.of(context).size.width) * 0.50,
+              width: (MediaQuery.of(context).size.width) * 0.10,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: (widget.tableModel.busy) ? Icon(
+                      Icons.check_circle,
+                      color: Color.fromRGBO(143, 148, 251, 1),
+                    ) : Icon(
+                          Icons.remove_circle_outlined,
+                          color: Color.fromRGBO(143, 158, 191, 1),
+                        ),
+              ),
+            ),
+            Container(
+              width: (MediaQuery.of(context).size.width) * 0.40,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Text(
-                  widget.floorName,
+                  widget.tableModel.title,
                   style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
@@ -60,7 +72,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.print),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      debugPrint("Butona tıklandı");
+                      //yazdır
                     },
                     iconSize: 24,
                   ),
@@ -68,7 +80,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.leak_remove_rounded),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      debugPrint("Butona tıklandı");
+                      //yer değiştirme
                     },
                     iconSize: 24,
                   ),
@@ -76,7 +88,6 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.play_arrow_sharp),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      debugPrint("Butona tıklandı");
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>TableScreen()));
                     },
                     iconSize: 24,

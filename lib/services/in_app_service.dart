@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class InAppService {
   String url="https://api.digigarson.org/v1/";
 
-  Future<List> fetchDataAllSections(String refreshToken,String accessToken) async {
+  Future<List> getAllSections(String refreshToken,String accessToken) async {
     String path=url+"waiter/sections";
 
     final http.Response response = await http.get(
@@ -25,10 +25,7 @@ class InAppService {
     }
   }
 
-  Future<List> fetchTableBySectionId(String refreshToken,String accessToken,String sectionId) async {
-    print("gelensectionId");
-    print(sectionId);
-
+  Future<List> getTablesBySectionId(String refreshToken,String accessToken,String sectionId) async {
     String path=url+"waiter/sections/"+"61714c2322b06713dc4650cb";
 
     final http.Response response = await http.get(

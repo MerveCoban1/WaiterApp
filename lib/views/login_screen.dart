@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/services/auth_service.dart';
 import 'forgot_password_screen.dart';
 import 'home_screen.dart';
@@ -13,10 +14,15 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  late Session session;
+  late SessionModel sessionModel;
   AuthService apiManager=AuthService();
   final GlobalKey<ScaffoldState> key=GlobalKey();
+  late SharedPreferences pref;
 
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pop(context);
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPasswordScreen()));
                       },
-                      child: Text("Şifremi Unuttum?", style: TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),)
+                      child: Text("Şifremi Unuttum", style: TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),)
                     ),
                   ],
                 ),
@@ -163,12 +169,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async{
-    session=await apiManager.loginUser(nameController.text.toString(), passwordController.text.toString());
-    if(session.accessToken=="Hata"){
-      key.currentState!.showSnackBar(SnackBar(content: Text("${session.refreshToken.toString()}")));
+    sessionModel=await apiManager.loginUser(nameController.text.toString(), passwordController.text.toString());
+    if(sessionModel.accessToken=="Hata"){
+      key.currentState!.showSnackBar(SnackBar(content: Text("${sessionModel.refreshToken.toString()}")));
     }else{
       Navigator.of(context).pop();
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(session)));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(sessionModel)));
     }
   }
+
 }

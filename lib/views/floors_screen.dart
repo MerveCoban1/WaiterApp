@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/models/section_model.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/widgets/floor_card.dart';
 
 class FloorsScreen extends StatefulWidget {
-  Session session;
-  FloorsScreen(this.session);
+  SessionModel sessionModel;
+  FloorsScreen(this.sessionModel);
   @override
   State<FloorsScreen> createState() => _FloorsScreenState();
 }
@@ -13,6 +14,7 @@ class FloorsScreen extends StatefulWidget {
 class _FloorsScreenState extends State<FloorsScreen> {
   var sectionsList=[];
   InAppService apiManagerInAppService=InAppService();
+  late SectionModel sectionModel;
 
   @override
   void initState() {
@@ -54,7 +56,8 @@ class _FloorsScreenState extends State<FloorsScreen> {
             child: ListView.builder(
               itemCount: sectionsList.length,
               itemBuilder: (BuildContext context, int index) {
-                return FloorCard(sectionsList[index]["title"],sectionsList[index]["_id"],widget.session);
+                sectionModel=SectionModel.fromJson(sectionsList[index]);
+                return FloorCard(sectionModel,widget.sessionModel);
               },
             )
           ),
@@ -63,7 +66,7 @@ class _FloorsScreenState extends State<FloorsScreen> {
   }
 
   void getAllSections() async{
-    var sectionList=await apiManagerInAppService.fetchDataAllSections(widget.session.refreshToken.toString(),widget.session.accessToken.toString());
+    var sectionList=await apiManagerInAppService.getAllSections(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString());
     if(sectionList.isEmpty){
       print("hata");
     }else{

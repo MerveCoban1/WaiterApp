@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:waiter_app_demo/models/section_model.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/views/floor_detail_screen.dart';
 
 class FloorCard extends StatefulWidget{
-  var floorName;
-  var floorId;
-  Session session;
-  FloorCard(this.floorName,this.floorId,this.session);
+  SectionModel sectionModel;
+  SessionModel sessionModel;
+  FloorCard(this.sectionModel,this.sessionModel);
 
   @override
   _FloorCardState createState() => _FloorCardState();
@@ -16,7 +16,7 @@ class _FloorCardState extends State<FloorCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>FloorDetailScreen(widget.floorId,widget.floorName,widget.session)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>FloorDetailScreen(widget.sectionModel,widget.sessionModel)));
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 10.0),
@@ -42,7 +42,7 @@ class _FloorCardState extends State<FloorCard> {
           ),
           child: Center(
             child: Text(
-              widget.floorName,
+              widget.sectionModel.title,
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,

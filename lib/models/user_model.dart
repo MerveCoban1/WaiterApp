@@ -1,4 +1,4 @@
-class Users{
+class UserModel{
   var _id;
   var email;
   var name;
@@ -7,10 +7,10 @@ class Users{
   var __v;
 
 
-  Users(this._id, this.email, this.name, this.createdAt, this.updatedAt,
+  UserModel(this._id, this.email, this.name, this.createdAt, this.updatedAt,
       this.__v);
 
-  Users.fromJson(Map json){
+  UserModel.fromJson(Map json){
     this._id=json["_id"];
     this.email=json["email"];
     this.name=json["name"];

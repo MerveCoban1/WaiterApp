@@ -1,13 +1,13 @@
-class Session{
+class SessionModel{
   var accessToken;
   var refreshToken;
 
-  Session(
+  SessionModel(
       this.accessToken,
       this.refreshToken,
       );
 
-  Session.fromJson(Map json){
+  SessionModel.fromJson(Map json){
     this.accessToken=json["accessToken"];
     this.refreshToken=json["refreshToken"];
   }

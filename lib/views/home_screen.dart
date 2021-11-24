@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/utils/user_control.dart';
 import 'package:waiter_app_demo/views/floors_screen.dart';
 import 'package:waiter_app_demo/views/orders_screen.dart';
 
+import 'login_screen.dart';
+
 class HomeScreen extends StatefulWidget {
-  Session session;
-  HomeScreen(this.session);
+  SessionModel sessionModel;
+  HomeScreen(this.sessionModel);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -13,13 +17,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _contents = [];
   int _activeContentNo = 0;
+  UserControl userControl=new UserControl();
+  late SharedPreferences pref;
+  var control;
 
   final GlobalKey<ScaffoldState> key=GlobalKey();
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    _contents=[FloorsScreen(widget.session),OrdersScreen()];
+    _contents=[FloorsScreen(widget.sessionModel),OrdersScreen()];
   }
 
   @override
@@ -50,7 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(Icons.logout),
+            child: InkWell(
+              onTap: (){
+                logout();
+              }, 
+              child: Icon(Icons.logout)
+            ),
           ),
         ],
         title: Row(
@@ -103,6 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
     );
+  }
+
+  Future<void> logout() async {
+    pref = await SharedPreferences.getInstance();
+    pref.setString("email","");
+    Navigator.of(context).pop();
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
   }
 
 }
