@@ -1,45 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/category_model.dart';
+import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/services/in_app_service.dart';
+import 'package:waiter_app_demo/widgets/category_card.dart';
 
-List<String> categoryList = [];
+class CategoryScreen extends StatefulWidget {
+  SessionModel sessionModel;
 
-class Category extends StatefulWidget {
+  CategoryScreen(this.sessionModel);
   @override
-  State<Category> createState() => _Category();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _Category extends State<Category> {
+class _CategoryScreenState extends State<CategoryScreen> {
+  var categoriesList=[];
+  InAppService apiManagerInAppService=InAppService();
+  late CategoryModel categoryModel;
+  @override
+  void initState() {
+    getAllCategory();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return buildContainer(context);
+    return ListView(
+      children: [
+        Container(
+          width: (MediaQuery.of(context).size.width),
+          height: (MediaQuery.of(context).size.height)*0.15,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(65),
+              topLeft: Radius.circular(65),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              "Kategoriler",
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(143, 158, 191, 1),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          width: (MediaQuery.of(context).size.width),
+          height: (MediaQuery.of(context).size.height)*0.68,
+          color: Colors.white,
+          child: GridView.count(
+            crossAxisCount: 4 ,
+            childAspectRatio: (3 / 4),
+            children: List.generate(categoriesList.length,(index){
+              categoryModel=CategoryModel.fromJson(categoriesList[index]);
+              return CategoryCard(categoryModel,widget.sessionModel);
+            }),
+          )
+        ),
+      ],
+    );
   }
 
-  Widget buildContainer(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black38,
-      body: Container(
-        child: GridView.count(
-          childAspectRatio: 4.0,
-          crossAxisCount: 2,
-          children: List.generate(
-              categoryList.length != 0 ? categoryList.length : 37, (index) {
-            return Container(
-              height: 100,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Center(
-                  child: Text(
-                    "Deneme",
-                    style: TextStyle(color: Colors.white, fontSize: 17.0),
-                  ),
-                ),
-                color: Colors.blue,
-              ),
-            );
-          }),
-        ),
-      ),
-    );
+  void getAllCategory() async{
+    var categoryList=await apiManagerInAppService.getAllCategory(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString());
+    if(categoryList.isEmpty){
+      print("hata");
+    }else{
+      setState(() {
+        categoriesList=categoryList;
+      });
+    }
   }
 }

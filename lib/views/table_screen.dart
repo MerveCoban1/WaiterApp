@@ -21,7 +21,7 @@ class _TableScreenState extends State<TableScreen> {
   @override
   void initState() {
     super.initState();
-    _contents = [TableDetailScreen(widget.tableModel,widget.sessionModel), Category(), OrdersScreen()];
+    _contents = [TableDetailScreen(widget.tableModel,widget.sessionModel), CategoryScreen(widget.sessionModel), OrdersScreen()];
   }
 
   @override

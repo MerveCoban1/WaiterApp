@@ -26,7 +26,7 @@ class InAppService {
   }
 
   Future<List> getTablesBySectionId(String refreshToken,String accessToken,String sectionId) async {
-    String path=url+"waiter/sections/"+"61714c2322b06713dc4650cb";
+    String path=url+"waiter/sections/"+"61714c2322b06713dc4650cb";  //buraya sectionId yazılacak
 
     final http.Response response = await http.get(
       Uri.parse(path),
@@ -39,6 +39,48 @@ class InAppService {
     if (response.statusCode == 200) {
       var tablesList=json.decode(response.body)['tables'];
       return tablesList;
+    } else {
+      throw Exception(
+        "İstek durumu başarısız oldu: ${response.body}",
+      );
+    }
+  }
+
+  Future<List> getAllCategory(String refreshToken,String accessToken) async {
+    String path=url+"waiter/category";
+
+    final http.Response response = await http.get(
+      Uri.parse(path),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-refresh' : refreshToken,
+        'Authorization' : 'Bearer '+ accessToken,
+      },
+    );
+    if (response.statusCode == 200) {
+      var _categoryList=json.decode(response.body);
+      return _categoryList;
+    } else {
+      throw Exception(
+        "İstek durumu başarısız oldu: ${response.body}",
+      );
+    }
+  }
+
+  Future<List> getProductsByCategoryId(String refreshToken,String accessToken,String categoryId) async {
+    String path=url+"waiter/category/"+"61937e5187d2bc72bdd31ad6"; //değişecek
+
+    final http.Response response = await http.get(
+      Uri.parse(path),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-refresh' : refreshToken,
+        'Authorization' : 'Bearer '+ accessToken,
+      },
+    );
+    if (response.statusCode == 200) {
+      var productsList=json.decode(response.body)['products'];
+      return productsList;
     } else {
       throw Exception(
         "İstek durumu başarısız oldu: ${response.body}",

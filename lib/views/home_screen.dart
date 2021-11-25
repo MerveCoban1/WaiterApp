@@ -50,10 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(Icons.shopping_cart),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
             child: InkWell(
               onTap: (){
                 logout();
