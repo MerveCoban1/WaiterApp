@@ -8,26 +8,29 @@ class CategoryScreen extends StatefulWidget {
   SessionModel sessionModel;
 
   CategoryScreen(this.sessionModel);
+
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  var categoriesList=[];
-  InAppService apiManagerInAppService=InAppService();
+  var categoriesList = [];
+  InAppService apiManagerInAppService = InAppService();
   late CategoryModel categoryModel;
+
   @override
   void initState() {
     getAllCategory();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Container(
           width: (MediaQuery.of(context).size.width),
-          height: (MediaQuery.of(context).size.height)*0.15,
+          height: (MediaQuery.of(context).size.height) * 0.15,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -47,29 +50,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ),
         Container(
-          width: (MediaQuery.of(context).size.width),
-          height: (MediaQuery.of(context).size.height)*0.68,
-          color: Colors.white,
-          child: GridView.count(
-            crossAxisCount: 4 ,
-            childAspectRatio: (3 / 4),
-            children: List.generate(categoriesList.length,(index){
-              categoryModel=CategoryModel.fromJson(categoriesList[index]);
-              return CategoryCard(categoryModel,widget.sessionModel);
-            }),
-          )
-        ),
+            width: (MediaQuery.of(context).size.width),
+            height: (MediaQuery.of(context).size.height) * 0.68,
+            color: Colors.white,
+            child: GridView.count(
+              crossAxisCount: 4,
+              childAspectRatio: (3 / 4),
+              children: List.generate(categoriesList.length, (index) {
+                categoryModel = CategoryModel.fromJson(categoriesList[index]);
+                return CategoryCard(categoryModel, widget.sessionModel);
+              }),
+            )),
       ],
     );
   }
 
-  void getAllCategory() async{
-    var categoryList=await apiManagerInAppService.getAllCategory(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString());
-    if(categoryList.isEmpty){
+  void getAllCategory() async {
+    var categoryList = await apiManagerInAppService.getAllCategory(
+        widget.sessionModel.refreshToken.toString(),
+        widget.sessionModel.accessToken.toString());
+    if (categoryList.isEmpty) {
       print("hata");
-    }else{
+    } else {
       setState(() {
-        categoriesList=categoryList;
+        categoriesList = categoryList;
       });
     }
   }

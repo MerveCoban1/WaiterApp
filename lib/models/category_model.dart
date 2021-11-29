@@ -14,7 +14,7 @@ class CategoryModel{
 
   CategoryModel.fromJson(Map json){
     this.is_sub_category=json["is_sub_category"];
-    this.id=json["id"];
+    this.id=json["_id"];
     this.image=json["image"];
     this.title=json["title"];
     this.branch=json["branch"];

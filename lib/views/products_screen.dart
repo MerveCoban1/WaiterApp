@@ -46,6 +46,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               itemCount: productsList.length,
               itemBuilder: (BuildContext context, int index) {
                 productModel=ProductModel.fromJson(productsList[index]);
+                print(productsList);
                 return ProductCard(productModel,widget.sessionModel);
               },
             )
@@ -85,6 +86,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       setState(() {
         productsList=productList;
       });
+      print(productList);
     }
   }
 
