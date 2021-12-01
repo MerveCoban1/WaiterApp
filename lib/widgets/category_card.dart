@@ -16,8 +16,6 @@ class _CategoryCardState extends State<CategoryCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        print(widget.categoryModel.id);
-        print(widget.categoryModel);
         Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductsScreen(widget.sessionModel,widget.categoryModel.id,widget.categoryModel.title)));
       },
       child: Container(

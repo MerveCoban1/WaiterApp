@@ -8,14 +8,16 @@ class ProductsScreen extends StatefulWidget {
   SessionModel sessionModel;
   var categoryId;
   var categoryName;
-  ProductsScreen(this.sessionModel,this.categoryId,this.categoryName);
+
+  ProductsScreen(this.sessionModel, this.categoryId, this.categoryName);
+
   @override
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  var productsList=[];
-  InAppService apiManagerInAppService=InAppService();
+  var productsList = [];
+  InAppService apiManagerInAppService = InAppService();
   late ProductModel productModel;
 
   @override
@@ -41,16 +43,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
               color: Colors.white,
             ),
             width: (MediaQuery.of(context).size.height),
-            height: (MediaQuery.of(context).size.height)*0.69,
+            height: (MediaQuery.of(context).size.height) * 0.69,
             child: ListView.builder(
               itemCount: productsList.length,
               itemBuilder: (BuildContext context, int index) {
-                productModel=ProductModel.fromJson(productsList[index]);
-                print(productsList);
-                return ProductCard(productModel,widget.sessionModel);
+                productModel = ProductModel.fromJson(productsList[index]);
+                return ProductCard(productModel, widget.sessionModel);
               },
-            )
-        ),
+            )),
       ],
     );
   }
@@ -65,8 +65,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         title: Padding(
-          padding: const EdgeInsets.only(left: 8.0,top: 10.0),
-          child: Text(widget.categoryName,
+          padding: const EdgeInsets.only(left: 8.0, top: 10.0),
+          child: Text(
+            widget.categoryName,
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
@@ -78,16 +79,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  void getAllProducts() async{
-    var productList=await apiManagerInAppService.getProductsByCategoryId(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString(),widget.categoryId.toString());
-    if(productList.isEmpty){
+  void getAllProducts() async {
+    var productList = await apiManagerInAppService.getProductsByCategoryId(
+        widget.sessionModel.refreshToken.toString(),
+        widget.sessionModel.accessToken.toString(),
+        widget.categoryId.toString());
+    if (productList.isEmpty) {
       print("hata");
-    }else{
+    } else {
       setState(() {
-        productsList=productList;
+        productsList = productList;
       });
-      print(productList);
     }
   }
-
 }

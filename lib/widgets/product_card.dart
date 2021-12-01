@@ -3,25 +3,31 @@ import 'package:waiter_app_demo/models/product_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/views/product_detail_screen.dart';
 
-class ProductCard extends StatefulWidget{
+class ProductCard extends StatefulWidget {
   ProductModel productModel;
   SessionModel sessionModel;
-  ProductCard(this.productModel,this.sessionModel);
+
+  ProductCard(this.productModel, this.sessionModel);
 
   @override
   _ProductCardState createState() => _ProductCardState();
 }
+
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(widget.productModel,widget.sessionModel)));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductDetailScreen(
+                    widget.productModel, widget.sessionModel)));
       },
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 10.0),
-        child:Container(
-          height: (MediaQuery.of(context).size.height)*0.10,
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
+        child: Container(
+          height: (MediaQuery.of(context).size.height) * 0.10,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(

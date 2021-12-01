@@ -70,7 +70,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         widget.sessionModel.refreshToken.toString(),
         widget.sessionModel.accessToken.toString());
     if (categoryList.isEmpty) {
-      print("hata");
     } else {
       setState(() {
         categoriesList = categoryList;

@@ -3,12 +3,14 @@ import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/category_screen.dart';
 import 'package:waiter_app_demo/views/table_detail_screen.dart';
+import 'hamper_screen.dart';
 import 'orders_screen.dart';
 
 class TableScreen extends StatefulWidget {
   TableModel tableModel;
   SessionModel sessionModel;
-  TableScreen(this.tableModel,this.sessionModel);
+
+  TableScreen(this.tableModel, this.sessionModel);
 
   @override
   State<TableScreen> createState() => _TableScreenState();
@@ -21,7 +23,11 @@ class _TableScreenState extends State<TableScreen> {
   @override
   void initState() {
     super.initState();
-    _contents = [TableDetailScreen(widget.tableModel,widget.sessionModel), CategoryScreen(widget.sessionModel), OrdersScreen(widget.sessionModel,widget.tableModel)];
+    _contents = [
+      TableDetailScreen(widget.tableModel, widget.sessionModel),
+      CategoryScreen(widget.sessionModel),
+      OrdersScreen(widget.sessionModel, widget.tableModel)
+    ];
   }
 
   @override
@@ -34,6 +40,9 @@ class _TableScreenState extends State<TableScreen> {
     );
   }
 
+  var deger = 0;
+  var hamper;
+
   PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
       preferredSize: Size.fromHeight(70.0),
@@ -45,14 +54,23 @@ class _TableScreenState extends State<TableScreen> {
         elevation: 0.0,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 10.0,top:11.0),
-            child: Icon(Icons.shopping_cart),
+            padding: const EdgeInsets.only(right: 10.0, top: 11.0),
+            child: GestureDetector(
+              child: Icon(Icons.shopping_cart),
+              onTap: () async {
+                hamper = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Hamper(widget.sessionModel, hamper)));
+              },
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 20.0,top:10.0),
+            padding: const EdgeInsets.only(right: 20.0, top: 10.0),
             child: Center(
               child: Text(
-                "0",
+                deger.toString(),
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -65,8 +83,9 @@ class _TableScreenState extends State<TableScreen> {
         title: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 8.0,top: 10.0),
-              child: Text(widget.tableModel.title,
+              padding: const EdgeInsets.only(left: 8.0, top: 10.0),
+              child: Text(
+                widget.tableModel.title,
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
