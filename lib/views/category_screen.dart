@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/category_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/widgets/category_card.dart';
 
 class CategoryScreen extends StatefulWidget {
   SessionModel sessionModel;
+  TableModel tableModel;
+  List<Products_AddProduct> productAddProduct;
 
-  CategoryScreen(this.sessionModel);
+  CategoryScreen(this.sessionModel, this.tableModel, this.productAddProduct);
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -50,17 +54,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ),
         Container(
-            width: (MediaQuery.of(context).size.width),
-            height: (MediaQuery.of(context).size.height) * 0.68,
-            color: Colors.white,
-            child: GridView.count(
-              crossAxisCount: 4,
-              childAspectRatio: (3 / 4),
-              children: List.generate(categoriesList.length, (index) {
+          width: (MediaQuery.of(context).size.width),
+          height: (MediaQuery.of(context).size.height) * 0.68,
+          color: Colors.white,
+          child: GridView.count(
+            crossAxisCount: 4,
+            childAspectRatio: (3 / 4),
+            children: List.generate(
+              categoriesList.length,
+              (index) {
                 categoryModel = CategoryModel.fromJson(categoriesList[index]);
-                return CategoryCard(categoryModel, widget.sessionModel);
-              }),
-            )),
+                return CategoryCard(categoryModel, widget.sessionModel,
+                    widget.tableModel, widget.productAddProduct);
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

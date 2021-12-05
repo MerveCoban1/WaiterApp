@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/category_screen.dart';
@@ -9,7 +10,6 @@ import 'orders_screen.dart';
 class TableScreen extends StatefulWidget {
   TableModel tableModel;
   SessionModel sessionModel;
-
   TableScreen(this.tableModel, this.sessionModel);
 
   @override
@@ -19,14 +19,18 @@ class TableScreen extends StatefulWidget {
 class _TableScreenState extends State<TableScreen> {
   List<Widget> _contents = [];
   int _activeContentNo = 0;
+  var deger = 0;
+  List<Products_AddProduct> productAddProduct=[];
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+    });
     _contents = [
-      TableDetailScreen(widget.tableModel, widget.sessionModel),
-      CategoryScreen(widget.sessionModel),
-      OrdersScreen(widget.sessionModel, widget.tableModel)
+      TableDetailScreen(widget.tableModel, widget.sessionModel,productAddProduct),
+      CategoryScreen(widget.sessionModel, widget.tableModel,productAddProduct),
+      OrdersScreen(widget.sessionModel, widget.tableModel,productAddProduct)
     ];
   }
 
@@ -39,9 +43,6 @@ class _TableScreenState extends State<TableScreen> {
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
-
-  var deger = 0;
-  var hamper;
 
   PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
@@ -58,11 +59,14 @@ class _TableScreenState extends State<TableScreen> {
             child: GestureDetector(
               child: Icon(Icons.shopping_cart),
               onTap: () async {
-                hamper = await Navigator.push(
+                productAddProduct = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            Hamper(widget.sessionModel, hamper)));
+                            Hamper(widget.sessionModel, productAddProduct)));
+                setState(() {
+                  productAddProduct = productAddProduct;
+                });
               },
             ),
           ),
@@ -70,7 +74,7 @@ class _TableScreenState extends State<TableScreen> {
             padding: const EdgeInsets.only(right: 20.0, top: 10.0),
             child: Center(
               child: Text(
-                deger.toString(),
+                 productAddProduct.length.toString(),
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,

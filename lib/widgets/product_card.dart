@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/product_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
+import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/views/product_detail_screen.dart';
 
 class ProductCard extends StatefulWidget {
   ProductModel productModel;
   SessionModel sessionModel;
+  TableModel tableModel;
+  List<Products_AddProduct> productAddProduct;
 
-  ProductCard(this.productModel, this.sessionModel);
+  ProductCard(this.productModel, this.sessionModel, this.tableModel,
+      this.productAddProduct);
 
   @override
   _ProductCardState createState() => _ProductCardState();
 }
+
+var myOptionsList = [];
+InAppService apiManagerInAppService = InAppService();
 
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProductDetailScreen(
-                    widget.productModel, widget.sessionModel)));
+        getMyBranch();
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
@@ -59,5 +64,30 @@ class _ProductCardState extends State<ProductCard> {
         ),
       ),
     );
+  }
+
+  void getMyBranch() async {
+    var _myOptionsList = await apiManagerInAppService.getOptions(
+        widget.sessionModel.refreshToken, widget.sessionModel.accessToken);
+    if (_myOptionsList.isEmpty) {
+      print("hata");
+    } else {
+      setState(() {
+        myOptionsList = _myOptionsList;
+      });
+      print("--------------");
+      print(myOptionsList);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductDetailScreen(
+              widget.productModel,
+              widget.sessionModel,
+              widget.tableModel,
+              myOptionsList,
+              widget.productAddProduct),
+        ),
+      );
+    }
   }
 }

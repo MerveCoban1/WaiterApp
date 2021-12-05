@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/category_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/products_screen.dart';
 
-class CategoryCard extends StatefulWidget{
+class CategoryCard extends StatefulWidget {
   CategoryModel categoryModel;
   SessionModel sessionModel;
-  CategoryCard(this.categoryModel,this.sessionModel);
+  TableModel tableModel;
+  List<Products_AddProduct> productAddProduct;
+
+  CategoryCard(this.categoryModel, this.sessionModel, this.tableModel, this.productAddProduct);
 
   @override
   _CategoryCardState createState() => _CategoryCardState();
 }
+
 class _CategoryCardState extends State<CategoryCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductsScreen(widget.sessionModel,widget.categoryModel.id,widget.categoryModel.title)));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductsScreen(
+                    widget.sessionModel,
+                    widget.categoryModel.id,
+                    widget.categoryModel.title,
+                    widget.tableModel, widget.productAddProduct)));
       },
       child: Container(
         child: Column(
@@ -26,15 +39,21 @@ class _CategoryCardState extends State<CategoryCard> {
               height: 80.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    fit: BoxFit.cover, image: NetworkImage(widget.categoryModel.image)),
-                borderRadius: BorderRadius.all(Radius.circular(100.0)),
-                border: Border.all(color: Color.fromRGBO(143, 148, 251, 1),width: 0.5),
+                  fit: BoxFit.cover,
+                  image: NetworkImage(widget.categoryModel.image),
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100.0),
+                ),
+                border: Border.all(
+                    color: Color.fromRGBO(143, 148, 251, 1), width: 0.5),
                 color: Color.fromRGBO(143, 148, 251, 1),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:10.0),
-              child: Text(widget.categoryModel.title,
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                widget.categoryModel.title,
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,

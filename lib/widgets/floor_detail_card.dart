@@ -3,15 +3,18 @@ import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/table_screen.dart';
 
-class FloorDetailCard extends StatefulWidget{
+class FloorDetailCard extends StatefulWidget {
   TableModel tableModel;
   SessionModel sessionModel;
-  FloorDetailCard(this.tableModel,this.sessionModel);
+
+  FloorDetailCard(this.tableModel, this.sessionModel);
 
   @override
   _FloorDetailCardState createState() => _FloorDetailCardState();
 }
+
 class _FloorDetailCardState extends State<FloorDetailCard> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,13 +45,15 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
               width: (MediaQuery.of(context).size.width) * 0.10,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: (widget.tableModel.busy) ? Icon(
-                      Icons.check_circle,
-                      color: Color.fromRGBO(143, 148, 251, 1),
-                    ) : Icon(
-                          Icons.remove_circle_outlined,
-                          color: Color.fromRGBO(143, 158, 191, 1),
-                        ),
+                child: (widget.tableModel.busy)
+                    ? Icon(
+                        Icons.check_circle,
+                        color: Color.fromRGBO(143, 148, 251, 1),
+                      )
+                    : Icon(
+                        Icons.remove_circle_outlined,
+                        color: Color.fromRGBO(143, 158, 191, 1),
+                      ),
               ),
             ),
             Container(
@@ -90,7 +95,13 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.play_arrow_sharp),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>TableScreen(widget.tableModel,widget.sessionModel)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TableScreen(
+                              widget.tableModel, widget.sessionModel),
+                        ),
+                      );
                     },
                     iconSize: 24,
                   ),

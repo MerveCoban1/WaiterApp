@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/product_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/services/in_app_service.dart';
 import 'package:waiter_app_demo/widgets/product_card.dart';
 
 class ProductsScreen extends StatefulWidget {
   SessionModel sessionModel;
+  TableModel tableModel;
+  List<Products_AddProduct> productAddProduct;
   var categoryId;
   var categoryName;
 
-  ProductsScreen(this.sessionModel, this.categoryId, this.categoryName);
+  ProductsScreen(this.sessionModel, this.categoryId, this.categoryName,
+      this.tableModel, this.productAddProduct);
 
   @override
   State<ProductsScreen> createState() => _ProductsScreenState();
@@ -39,18 +44,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return ListView(
       children: [
         Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            width: (MediaQuery.of(context).size.height),
-            height: (MediaQuery.of(context).size.height) * 0.69,
-            child: ListView.builder(
-              itemCount: productsList.length,
-              itemBuilder: (BuildContext context, int index) {
-                productModel = ProductModel.fromJson(productsList[index]);
-                return ProductCard(productModel, widget.sessionModel);
-              },
-            )),
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          width: (MediaQuery.of(context).size.height),
+          height: (MediaQuery.of(context).size.height) * 0.69,
+          child: ListView.builder(
+            itemCount: productsList.length,
+            itemBuilder: (BuildContext context, int index) {
+              productModel = ProductModel.fromJson(productsList[index]);
+              return ProductCard(productModel, widget.sessionModel,
+                  widget.tableModel, widget.productAddProduct);
+            },
+          ),
+        ),
       ],
     );
   }

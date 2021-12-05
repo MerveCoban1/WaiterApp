@@ -135,4 +135,23 @@ class InAppService {
       print(response.reasonPhrase);
     }
   }
+
+  Future<List> getOptions(
+      String refreshToken, String accessToken) async {
+    final http.Response response = await http.get(
+      Uri.parse('${url}waiter/mybranch'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-refresh': refreshToken,
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      var myOptionsList = json.decode(response.body)['options'];
+      print(myOptionsList);
+      return myOptionsList;
+    } else {
+      throw Exception("İstek durumu başarısız oldu: ${response.reasonPhrase}");
+    }
+  }
 }

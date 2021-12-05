@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:waiter_app_demo/models/item.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
+import 'package:waiter_app_demo/models/orders_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/services/in_app_service.dart';
@@ -8,8 +9,9 @@ import "package:collection/collection.dart";
 class OrdersScreen extends StatefulWidget {
   SessionModel sessionModel;
   TableModel tableModel;
+  List<Products_AddProduct> productAddProduct;
 
-  OrdersScreen(this.sessionModel, this.tableModel);
+  OrdersScreen(this.sessionModel, this.tableModel, this.productAddProduct);
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
