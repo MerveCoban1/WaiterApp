@@ -48,28 +48,49 @@ class _HamperState extends State<Hamper> {
   }
 
   buildView(BuildContext context) {
-    //var width = (MediaQuery.of(context).size.height);
+    var width = (MediaQuery.of(context).size.height);
     var height = (MediaQuery.of(context).size.height);
     return Container(
       height: height,
       color: Colors.white,
       padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
-      child: Dismissible(
-        child: ListTile(
-          title: Container(
-            child: Column(
-              children: [
-                Text('Selam'),
-              ],
-            ),
-          ),
-        ),
-        background: Container(
-          color: Colors.red,
-        ),
-        key: ValueKey<int>(3),
-        onDismissed: (DismissDirection direction) {
-          setState(() {});
+      child: ListView.builder(
+        itemCount: 5,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: [
+              Dismissible(
+                child: ListTile(
+                  leading: Container(
+                    width: width * 0.035,
+                    height: height * 0.035,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffffffff),
+                      border: Border.all(
+                          width: 1.0, color: const Color(0xff707070)),
+                    ),
+                    child: Center(
+                      child: GestureDetector(
+                        child: Text('0'),
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
+                  title: Text('Three-line ListTile'),
+                  subtitle: Text(
+                      'A sufficiently long subtitle warrants three lines.'),
+                ),
+                background: Container(
+                  color: Colors.red,
+                ),
+                key: ValueKey<int>(1),
+                onDismissed: (DismissDirection direction) {
+                  setState(() {});
+                },
+              ),
+            ],
+          );
         },
       ),
     );
