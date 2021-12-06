@@ -209,8 +209,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                   Container(
                                                                       child: FloatingActionButton(
                                                                           onPressed: () {
-                                                                            add(index1,
-                                                                                index2);
+                                                                            removList[index1][index2] +=
+                                                                                1;
+                                                                            setState(() {
+                                                                              removList = removList;
+                                                                            });
                                                                           },
                                                                           child: Icon(Icons.add, color: Colors.black),
                                                                           backgroundColor: Colors.white),
@@ -228,8 +231,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                                   Container(
                                                                       child: FloatingActionButton(
                                                                           onPressed: () {
-                                                                            minus(index1,
-                                                                                index2);
+                                                                            if (removList[index1][index2] !=
+                                                                                0)
+                                                                              removList[index1][index2] -= 1;
+                                                                            setState(() {
+                                                                              removList = removList;
+                                                                            });
                                                                           },
                                                                           child: Icon(Icons.remove, color: Colors.black),
                                                                           backgroundColor: Colors.white),
@@ -324,19 +331,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  void add(int index1, int index2) {
-    removList[index1][index2] += 1;
-    setState(() {
-      removList = removList;
-    });
-  }
+  void add(int index1, int index2) {}
 
-  void minus(int index1, int index2) {
-    if (removList[index1][index2] != 0) removList[index1][index2] -= 1;
-    setState(() {
-      removList = removList;
-    });
-  }
+  void minus(int index1, int index2) {}
 
   int listGet() {
     var arrayLenght = 0,

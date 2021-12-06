@@ -43,10 +43,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    Options deger;
+    late Options? deger;
     widget.productModel.options.forEach((element) {
-      deger = getOptions(element)!;
-      optionsList.add(deger);
+      deger = getOptions(element);
+      if (deger != null) optionsList.add(deger!);
     });
     widget.productModel.prices.forEach((element) {
       items.add(
@@ -80,7 +80,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context, "Hello world");
+            Navigator.pop(context, productAddProduct);
           },
         ),
         iconTheme: IconThemeData(
@@ -449,12 +449,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Options? getOptions(String id) {
     late Options options;
     var i = 0;
-    print('/////////////////');
-    print(widget.myOptionsList);
     widget.myOptionsList.forEach((element) {
-      print('**********************');
-      print(element['_id']);
-      print(id);
       if (element['_id'] == id) {
         i++;
         options = element;

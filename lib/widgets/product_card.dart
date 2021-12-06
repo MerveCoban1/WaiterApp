@@ -26,8 +26,9 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        getMyBranch();
+      onTap: () async {
+        List<Products_AddProduct> list = await getMyBranch();
+          widget.productAddProduct = list;
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
@@ -66,7 +67,8 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  void getMyBranch() async {
+  Future<List<Products_AddProduct>> getMyBranch() async {
+    var List = <Products_AddProduct>[];
     var _myOptionsList = await apiManagerInAppService.getOptions(
         widget.sessionModel.refreshToken, widget.sessionModel.accessToken);
     if (_myOptionsList.isEmpty) {
@@ -75,9 +77,7 @@ class _ProductCardState extends State<ProductCard> {
       setState(() {
         myOptionsList = _myOptionsList;
       });
-      print("--------------");
-      print(myOptionsList);
-      Navigator.push(
+      List = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ProductDetailScreen(
@@ -89,5 +89,6 @@ class _ProductCardState extends State<ProductCard> {
         ),
       );
     }
+    return List;
   }
 }

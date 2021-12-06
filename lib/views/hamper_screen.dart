@@ -46,7 +46,7 @@ class _HamperState extends State<Hamper> {
       ),
     );
   }
-  //var a= Hamper();
+
   buildView(BuildContext context) {
     //var width = (MediaQuery.of(context).size.height);
     var height = (MediaQuery.of(context).size.height);
@@ -54,143 +54,24 @@ class _HamperState extends State<Hamper> {
       height: height,
       color: Colors.white,
       padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
-      /*child: Stack(
-        children: [
-          ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: widget.hamper.products.length,
-            itemBuilder:
-                (BuildContext context, int index2) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                    left: 12.0, right: 4.0),
-                child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${tList[index1][index2]['quantity']}x',
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          letterSpacing: 0.3,
-                          height: 1.3),
-                    ),
-                    Text(
-                      '${tList[index1][index2]['productName']}',
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          letterSpacing: 0.3,
-                          height: 1.3),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '${tList[index1][index2]['price']}₺',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 16,
-                              letterSpacing: 0.3,
-                              height: 1.3),
-                        ),
-                        edit[index1] == true
-                            ? Container(
-                          width: width * 0.28,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                color: Colors
-                                    .redAccent,
-                                icon: Icon(
-                                    Icons
-                                        .delete_forever,
-                                    size: 22),
-                                onPressed: () {
-                                  InAppService
-                                  deleteOrders =
-                                  InAppService();
-                                  deleteOrders.deleteOrders(
-                                      widget
-                                          .sessionModel
-                                          .refreshToken,
-                                      widget
-                                          .sessionModel
-                                          .accessToken,
-                                      widget
-                                          .tableModel
-                                          .id,
-                                      tList[index1][
-                                      index2]
-                                      ['_id'],
-                                      tList[index1][
-                                      index2]
-                                      [
-                                      'productId'],
-                                      removList[
-                                      index1]
-                                      [index2]);
-                                  getOrders();
-                                  listGet();
-                                },
-                              ),
-                              Container(
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceEvenly,
-                                    children: <
-                                        Widget>[
-                                      Container(
-                                          child: FloatingActionButton(
-                                              onPressed: () {
-                                                add(index1,
-                                                    index2);
-                                              },
-                                              child: Icon(Icons.add, color: Colors.black),
-                                              backgroundColor: Colors.white),
-                                          width: width * 0.06,
-                                          height: height * 0.05),
-                                      Text(
-                                        removList[index1]
-                                        [
-                                        index2]
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize:
-                                            16.0),
-                                      ),
-                                      Container(
-                                          child: FloatingActionButton(
-                                              onPressed: () {
-                                                minus(index1,
-                                                    index2);
-                                              },
-                                              child: Icon(Icons.remove, color: Colors.black),
-                                              backgroundColor: Colors.white),
-                                          width: width * 0.06,
-                                          height: height * 0.05),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                            : Padding(
-                          padding: EdgeInsets.zero,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+      child: Dismissible(
+        child: ListTile(
+          title: Container(
+            child: Column(
+              children: [
+                Text('Selam'),
+              ],
+            ),
           ),
-        ],
-      ),*/
+        ),
+        background: Container(
+          color: Colors.red,
+        ),
+        key: ValueKey<int>(3),
+        onDismissed: (DismissDirection direction) {
+          setState(() {});
+        },
+      ),
     );
   }
 }

@@ -9,14 +9,15 @@ class FloorDetailScreen extends StatefulWidget {
   SectionModel sectionModel;
   SessionModel sessionModel;
 
-  FloorDetailScreen(this.sectionModel,this.sessionModel);
+  FloorDetailScreen(this.sectionModel, this.sessionModel);
+
   @override
   State<FloorDetailScreen> createState() => _FloorDetailScreenState();
 }
 
 class _FloorDetailScreenState extends State<FloorDetailScreen> {
-  var tableList=[];
-  InAppService apiManagerInAppService=InAppService();
+  var tableList = [];
+  InAppService apiManagerInAppService = InAppService();
   late TableModel tableModel;
 
   @override
@@ -55,12 +56,11 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
             height: (MediaQuery.of(context).size.height),
             color: Colors.white,
             child: ListView.builder(
-              itemCount: tableList.length,
-              itemBuilder: (BuildContext context, int index) {
-                tableModel=TableModel.fromJson(tableList[index]);
-                return FloorDetailCard(tableModel,widget.sessionModel);
-              }
-            ),
+                itemCount: tableList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  tableModel = TableModel.fromJson(tableList[index]);
+                  return FloorDetailCard(tableModel, widget.sessionModel);
+                }),
           ),
         ),
       ],
@@ -76,22 +76,24 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
       elevation: 0.0,
       leading: InkWell(
         child: Icon(Icons.arrow_back),
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
       ),
     );
   }
 
-  void getAllTables() async{
-    var tableListComing=await apiManagerInAppService.getTablesBySectionId(widget.sessionModel.refreshToken.toString(),widget.sessionModel.accessToken.toString(),widget.sectionModel.id);
-    if(tableListComing.isEmpty){
+  void getAllTables() async {
+    var tableListComing = await apiManagerInAppService.getTablesBySectionId(
+        widget.sessionModel.refreshToken.toString(),
+        widget.sessionModel.accessToken.toString(),
+        widget.sectionModel.id);
+    if (tableListComing.isEmpty) {
       print("hata");
-    }else{
+    } else {
       setState(() {
-        tableList=tableListComing;
+        tableList = tableListComing;
       });
     }
   }
-
 }

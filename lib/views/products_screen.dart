@@ -66,6 +66,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return PreferredSize(
       preferredSize: Size.fromHeight(70.0),
       child: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color.fromRGBO(143, 148, 251, 1)),
+          onPressed: () {
+            Navigator.pop(context, widget.productAddProduct);
+          },
+        ),
         iconTheme: IconThemeData(
           color: Color.fromRGBO(143, 148, 251, 1),
         ),

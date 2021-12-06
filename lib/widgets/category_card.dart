@@ -18,11 +18,11 @@ class CategoryCard extends StatefulWidget {
 }
 
 class _CategoryCardState extends State<CategoryCard> {
-  @override
+  var List=<Products_AddProduct>[];
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+       List= await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ProductsScreen(
@@ -30,6 +30,10 @@ class _CategoryCardState extends State<CategoryCard> {
                     widget.categoryModel.id,
                     widget.categoryModel.title,
                     widget.tableModel, widget.productAddProduct)));
+       setState(() {
+         widget.productAddProduct=List;
+       });
+         print(widget.productAddProduct.length);
       },
       child: Container(
         child: Column(
