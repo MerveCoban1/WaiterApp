@@ -72,7 +72,7 @@ class _ProductCardState extends State<ProductCard> {
     var _myOptionsList = await apiManagerInAppService.getOptions(
         widget.sessionModel.refreshToken, widget.sessionModel.accessToken);
     if (_myOptionsList.isEmpty) {
-      print("hata");
+      print("Ahmet");
     } else {
       setState(() {
         myOptionsList = _myOptionsList;

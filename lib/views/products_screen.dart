@@ -98,7 +98,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         widget.sessionModel.accessToken.toString(),
         widget.categoryId.toString());
     if (productList.isEmpty) {
-      print("hata");
+      print("list Boş");
     } else {
       setState(() {
         productsList = productList;

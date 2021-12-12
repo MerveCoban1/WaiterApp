@@ -63,7 +63,7 @@ class _TableScreenState extends State<TableScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            Hamper(widget.sessionModel, productAddProduct)));
+                            Hamper(widget.sessionModel, productAddProduct, widget.tableModel)));
                 setState(() {
                   productAddProduct = productAddProduct;
                 });

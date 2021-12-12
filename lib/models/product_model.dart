@@ -10,10 +10,6 @@ class ProductModel {
   late String category;
   late String description;
   late String title;
-  late String createdAt;
-  late String updatedAt;
-  late String slug;
-  late int iV;
 
   ProductModel(
       {required this.sId,
@@ -26,11 +22,7 @@ class ProductModel {
       required this.branch,
       required this.category,
       required this.description,
-      required this.title,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.slug,
-      required this.iV});
+      required this.title});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -49,10 +41,24 @@ class ProductModel {
     category = json['category'];
     description = json['description'];
     title = json['title'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    slug = json['slug'];
-    iV = json['__v'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['active_list'] = this.activeList;
+    data['options'] = this.options;
+    if (this.prices != null) {
+      data['prices'] = this.prices.map((v) => v.toJson()).toList();
+    }
+    data['end_time'] = this.endTime;
+    data['start_time'] = this.startTime;
+    data['image'] = this.image;
+    data['branch'] = this.branch;
+    data['category'] = this.category;
+    data['description'] = this.description;
+    data['title'] = this.title;
+    return data;
   }
 }
 
@@ -64,7 +70,7 @@ class Prices {
   late int saleType;
   late int orderType;
   late int amount;
-  late int price;
+  late double price;
   late String createdAt;
   late String updatedAt;
 
@@ -88,8 +94,23 @@ class Prices {
     saleType = json['sale_type'];
     orderType = json['order_type'];
     amount = json['amount'];
-    price = json['price'];
+    price = json['price'].toDouble();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['price_name'] = this.priceName;
+    data['currency'] = this.currency;
+    data['vat_rate'] = this.vatRate;
+    data['sale_type'] = this.saleType;
+    data['order_type'] = this.orderType;
+    data['amount'] = this.amount;
+    data['price'] = this.price;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    return data;
   }
 }

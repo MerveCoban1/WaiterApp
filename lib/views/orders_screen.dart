@@ -365,11 +365,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
       });
     });
     tList.forEach((element) {
-      var sayac = 0, totalPrice = 0, empty = true;
+      var sayac = 0, totalPrice = 0.0, empty = true;
       element.forEach((_element) {
         if (_element.isNotEmpty) {
           sayac++;
-          totalPrice += (_element['price'] as int);
+          totalPrice += (_element['price'] as double);
           empty = false;
         }
       });

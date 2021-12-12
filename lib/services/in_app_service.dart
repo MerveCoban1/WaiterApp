@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:waiter_app_demo/models/add_product.dart';
+import 'package:waiter_app_demo/models/table_model.dart';
 
 class InAppService {
   String url = "https://api.digigarson.org/v1/";
@@ -27,9 +29,7 @@ class InAppService {
 
   Future<List> getTablesBySectionId(
       String refreshToken, String accessToken, String sectionId) async {
-    String path = url +
-        "waiter/sections/" +
-        "61714c2322b06713dc4650cb"; //buraya sectionId yazılacak
+    String path = url + "waiter/sections/" + sectionId;
 
     final http.Response response = await http.get(
       Uri.parse(path),
@@ -136,8 +136,7 @@ class InAppService {
     }
   }
 
-  Future<List> getOptions(
-      String refreshToken, String accessToken) async {
+  Future<List> getOptions(String refreshToken, String accessToken) async {
     final http.Response response = await http.get(
       Uri.parse('${url}waiter/mybranch'),
       headers: <String, String>{
@@ -152,6 +151,96 @@ class InAppService {
       return myOptionsList;
     } else {
       throw Exception("İstek durumu başarısız oldu: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<void> postCreateOrder(
+      String refreshToken,
+      String accessToken,
+      List<Products_AddProduct> Products_AddProduct,
+      TableModel tableModel) async {
+    var resBody = {};
+    var options = {};
+    var product = {};
+    Products_AddProduct.forEach((element) {
+      element.options.forEach((element) {
+        options
+            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+        options
+            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+      });
+      resBody.addAll({
+        "product": "${element.productId}",
+        "quantity": element.quantity,
+        "price": "${element.priceId}",
+        "options": [options]
+      });
+    });
+
+    product["products"] = [resBody];
+
+    var headers = {
+      'x-refresh': '$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request(
+        'POST', Uri.parse('${url}waiter/orders/${tableModel.id}'));
+    request.body = json.encode(product);
+    print(request.body);
+    print("cdssd${tableModel.id}");
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+  Future<void> putCreateOrder(
+      String refreshToken,
+      String accessToken,
+      List<Products_AddProduct> Products_AddProduct,
+      TableModel tableModel) async {
+    var resBody = {};
+    var options = {};
+    var product = {};
+    Products_AddProduct.forEach((element) {
+      element.options.forEach((element) {
+        options
+            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+        options
+            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+      });
+      resBody.addAll({
+        "product": "${element.productId}",
+        "quantity": element.quantity,
+        "price": "${element.priceId}",
+        "options": [options]
+      });
+    });
+
+    product["products"] = [resBody];
+
+    var headers = {
+      'x-refresh': '$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    };
+    var request = await http.Request(
+        'PUT', Uri.parse('${url}waiter/orders/${tableModel.id}'));
+    request.body = json.encode(product);
+    print(request.body);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/hamper.dart';
 import 'package:waiter_app_demo/models/my_branch.dart';
@@ -25,6 +26,7 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   var _number = 1,
       select = 0,
+      priceName,
       totalPrice,
       currency,
       items = <String>[],
@@ -37,30 +39,52 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ListItemId = <String>[],
       optionId,
       dropdownvalue = 'Boy Seçiniz',
-      dropdownvalue1 = 'Boy Seçiniz',
-      priceId = '';
+      dropdownvaluelist = <String>[],
+      optionsPrice = <int>[],
+      optionsPriceTotal = 0.0,
+      priceId = '',
+      subOption = <String>[];
 
   @override
   void initState() {
     super.initState();
     late Options? deger;
-    widget.productModel.options.forEach((element) {
-      deger = getOptions(element);
-      if (deger != null) optionsList.add(deger!);
-    });
+    widget.productModel.options != null
+        ? widget.productModel.options.forEach((element) {
+            if (element != null) {
+              deger = getOptions(element);
+              if (deger != null) {
+                optionsList.add(deger!);
+                dropdownvaluelist.add(deger!.items.first.itemName.toString());
+                optionsPrice.add(deger!.items.first.price);
+                subOption.add(deger!.items.first.sId);
+                Options_AddProduct oop = Options_AddProduct(
+                    id: deger!.sId,
+                    subOption: subOption,
+                    option_name: deger!.optionName,
+                    subOptionReply: deger!.items.first.itemName);
+                options_.add(oop);
+              }
+            }
+          })
+        : null;
     widget.productModel.prices.forEach((element) {
       items.add(
           '${element.priceName.toString()}*${element.price.toString()}*${element.currency.toString()}*${element.sId.toString()}');
     });
+    optionsPrice.forEach((element) {
+      optionsPriceTotal += element;
+    });
     setState(() {
       productAddProduct = widget.productAddProduct;
-      totalPrice = int.parse(items.first.split('*')[1]);
+      priceName = items.first.split('*')[0];
+      totalPrice = double.parse(items.first.split('*')[1]);
       currency = items.first.split('*')[2];
       priceId = items.first.split('*')[3];
       dropdownvalue = items.first;
-      dropdownvalue1 =
-          optionsList.isNotEmpty ? optionsList.first.optionSpecialName : 'sa';
+      dropdownvaluelist = dropdownvaluelist;
       optionsList = optionsList;
+      optionsPriceTotal = optionsPriceTotal;
     });
   }
 
@@ -69,7 +93,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(143, 148, 251, 1),
       appBar: buildAppBar(context),
-      body: buildView(context, items, dropdownvalue),
+      body: buildView(context, items, dropdownvalue.split('*')[0]),
     );
   }
 
@@ -93,12 +117,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: const EdgeInsets.only(right: 10.0, top: 11.0),
             child: GestureDetector(
               child: Icon(Icons.shopping_cart),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                productAddProduct = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            Hamper(widget.sessionModel, productAddProduct)));
+                        builder: (context) => Hamper(widget.sessionModel,
+                            productAddProduct, widget.tableModel)));
+                setState(() {
+                  productAddProduct = productAddProduct;
+                });
               },
             ),
           ),
@@ -195,7 +222,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             children: [
                               Container(
                                 child: Text(
-                                  '${(totalPrice * _number).toString()} ${currency} ',
+                                  '${(totalPrice + optionsPriceTotal) * _number} ${currency} ',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Color.fromRGBO(143, 158, 191, 1),
@@ -204,43 +231,114 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                               ),
                               Container(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        child: FloatingActionButton(
-                                            heroTag: '+',
-                                            onPressed: () {
-                                              add();
-                                            },
-                                            child: Icon(Icons.add,
-                                                color: Colors.black),
-                                            backgroundColor: Colors.lightGreen),
-                                        width: width * 0.06,
-                                        height: height * 0.05),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 8.0, right: 8.0),
-                                      child: Text(
-                                        _number.toString(),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color:
-                                              Color.fromRGBO(143, 158, 191, 1),
-                                        ),
+                                width: width * 0.1,
+                                height: height * 0.05,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffffffff),
+                                  border: Border.all(
+                                      width: 1.0,
+                                      color: const Color(0xff707070)),
+                                ),
+                                child: Center(
+                                  child: GestureDetector(
+                                    child: Text(
+                                      _number.toString(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Color.fromRGBO(143, 158, 191, 1),
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    Container(
-                                        child: FloatingActionButton(
-                                            heroTag: '-',
-                                            onPressed: () {
-                                              minus();
-                                            },
-                                            child: Icon(Icons.remove,
-                                                color: Colors.black),
-                                            backgroundColor: Colors.redAccent),
-                                        width: width * 0.06,
-                                        height: height * 0.05),
-                                  ],
+                                    onTap: () {
+                                      var val = _number;
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => StatefulBuilder(
+                                            builder: (BuildContext context,
+                                                StateSetter setModalState) {
+                                          return AlertDialog(
+                                            contentPadding:
+                                                EdgeInsetsDirectional.only(
+                                                    bottom: 0),
+                                            actionsPadding:
+                                                EdgeInsetsDirectional.all(0),
+                                            title: Center(
+                                                child: new Text(
+                                              widget.productModel.title,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Color.fromRGBO(
+                                                    143, 158, 191, 1),
+                                                fontWeight: FontWeight.w900,
+                                              ),
+                                            )),
+                                            content: Container(
+                                              height: height * 0.22,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  SizedBox(height: 7),
+                                                  Text(
+                                                    'Adet Seçimi',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Color.fromRGBO(
+                                                          143, 158, 191, 1),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  NumberPicker(
+                                                      value: val,
+                                                      minValue: 1,
+                                                      maxValue: 100,
+                                                      step: 1,
+                                                      onChanged: (value) =>
+                                                          setModalState(() {
+                                                            val = value;
+                                                          })),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              // usually buttons at the bottom of the dialog
+                                              Center(
+                                                child: new TextButton(
+                                                  child: new Text("Tamam"),
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor:
+                                                        Color.fromRGBO(
+                                                            143, 148, 251, 1),
+                                                    textStyle: TextStyle(
+                                                        fontSize: 20,
+                                                        fontStyle:
+                                                            FontStyle.italic),
+                                                    primary: Colors.white,
+                                                    minimumSize: Size(95, 45),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 16.0),
+                                                    shape:
+                                                        const BeveledRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  7)),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _number = val;
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -265,7 +363,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             icon: Icon(Icons.arrow_downward),
                             iconSize: 24,
                             elevation: 16,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               color: Color.fromRGBO(143, 158, 191, 1),
                             ),
@@ -279,8 +377,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 return DropdownMenuItem(
                                   onTap: () {
                                     setState(() {
+                                      dropdownValue = dropdownvalue
+                                          .split('*')[0]
+                                          .toString();
                                       totalPrice =
-                                          int.parse(items.split('*')[1]);
+                                          double.parse(items.split('*')[1]);
                                       currency = items.split('*')[2];
                                       priceId = items.split('*')[3];
                                     });
@@ -308,77 +409,127 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       optionsList.isNotEmpty
                           ? Container(
-                              //burada width verilecek ve options adını falan düzenlemesi var
+                              height: height * 0.5,
                               child: ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                padding: const EdgeInsets.all(8),
                                 itemCount: optionsList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   var itemList = optionsList[index].items;
                                   return Container(
-                                    height: 50,
-                                    margin: EdgeInsets.all(2),
-                                    color: Colors.black38,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          right: 10.0, left: 10.0),
-                                      child: Column(
-                                        children: [
-                                          DropdownButton(
-                                            value: dropdownvalue1,
-                                            isExpanded: true,
-                                            underline: SizedBox(),
-                                            icon: Icon(Icons.arrow_downward),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              color: Color.fromRGBO(
-                                                  143, 158, 191, 1),
-                                            ),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                dropdownvalue1 = newValue!;
-                                              });
-                                            },
-                                            items: itemList.map(
-                                              (Items items) {
-                                                return DropdownMenuItem(
-                                                  onTap: () {
-                                                    ListItemId.add(items.sId);
-                                                    optionId =
-                                                        optionsList[index].sId;
-                                                    options_[index] =
-                                                        Options_AddProduct(
-                                                            id: optionId,
-                                                            subOption:
-                                                                ListItemId);
-                                                    setState(() {
-                                                      options_ = options_;
-                                                    });
-                                                  },
-                                                  value: items.itemName,
-                                                  child: Row(
-                                                    children: [
-                                                      Text(''),
-                                                    ],
+                                    height: height * 0.13,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              right: 10.0, left: 10.0),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                width: width,
+                                                child: Text(
+                                                  optionsList[index]
+                                                      .optionSpecialName,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Color.fromRGBO(
+                                                        143, 158, 191, 1),
+                                                    fontWeight: FontWeight.w900,
                                                   ),
-                                                );
-                                              },
-                                            ).toList(),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: Container(
+                                                  width: width,
+                                                  child: DropdownButton(
+                                                    value:
+                                                        dropdownvaluelist[index]
+                                                            .toString(),
+                                                    isExpanded: true,
+                                                    underline: SizedBox(),
+                                                    icon: Icon(
+                                                        Icons.arrow_downward),
+                                                    iconSize: 24,
+                                                    elevation: 16,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      color: Color.fromRGBO(
+                                                          143, 158, 191, 1),
+                                                    ),
+                                                    onChanged:
+                                                        (String? newValue) {
+                                                      setState(() {
+                                                        dropdownvaluelist[
+                                                            index] = newValue!;
+                                                      });
+                                                    },
+                                                    items: itemList.map(
+                                                      (Items items) {
+                                                        return DropdownMenuItem(
+                                                          onTap: () {
+                                                            var _price = 0.0;
+                                                            optionsPrice[
+                                                                    index] =
+                                                                items.price;
+                                                            optionsPrice
+                                                                .forEach(
+                                                                    (element) {
+                                                              _price += element;
+                                                            });
+                                                            subOption[index] =
+                                                                (items.sId);
+                                                            Options_AddProduct oop = Options_AddProduct(
+                                                                id: optionsList[
+                                                                        index]
+                                                                    .sId,
+                                                                subOption: [
+                                                                  subOption[
+                                                                      index]
+                                                                ],
+                                                                option_name:
+                                                                    optionsList[
+                                                                            index]
+                                                                        .optionName,
+                                                                subOptionReply:
+                                                                    items
+                                                                        .itemName);
+                                                            options_[index] =
+                                                                (oop);
+                                                            setState(() {
+                                                              options_ =
+                                                                  options_;
+                                                              optionsPriceTotal =
+                                                                  _price;
+                                                            });
+                                                          },
+                                                          value: items.itemName,
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                  '${items.itemName} (${items.price} ${currency} ekle)'),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    ).toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 8.0, bottom: 8.0),
-                                            child: Divider(
-                                              height: 20,
-                                              thickness: 2,
-                                              color: Colors.black12,
-                                            ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 8.0, bottom: 8.0),
+                                          child: Divider(
+                                            height: 20,
+                                            thickness: 2,
+                                            color: Colors.black12,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 },
@@ -410,11 +561,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  //Options_AddProduct(id: element.sId, subOption: element.items[4]);
+                  print(
+                      'opPrice: ${optionsPriceTotal} totalPrice: $totalPrice number: $_number');
                   var productAddProductList = Products_AddProduct(
-                      product: widget.productModel.sId,
+                      currency: currency,
+                      totalPrice: (totalPrice + optionsPriceTotal),
+                      productSelect: dropdownValue,
+                      productId: widget.productModel.sId,
                       quantity: _number,
-                      price: priceId,
+                      priceId: priceId,
                       options: options_,
                       description: widget.productModel.description,
                       title: widget.productModel.title);
@@ -432,31 +587,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  void add() {
-    _number += 1;
-    setState(() {
-      _number = _number;
-    });
-  }
-
-  void minus() {
-    if (_number != 1) _number -= 1;
-    setState(() {
-      _number;
-    });
-  }
-
   Options? getOptions(String id) {
     late Options options;
     var i = 0;
     widget.myOptionsList.forEach((element) {
       if (element['_id'] == id) {
         i++;
-        options = element;
+        options = Options.fromJson(element);
       }
     });
     if (i != 0) {
-      print(options);
       return options;
     } else {
       return null;

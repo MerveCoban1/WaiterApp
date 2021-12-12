@@ -33,7 +33,6 @@ class _CategoryCardState extends State<CategoryCard> {
        setState(() {
          widget.productAddProduct=List;
        });
-         print(widget.productAddProduct.length);
       },
       child: Container(
         child: Column(

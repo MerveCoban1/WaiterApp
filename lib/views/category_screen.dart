@@ -58,7 +58,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           height: (MediaQuery.of(context).size.height) * 0.68,
           color: Colors.white,
           child: GridView.count(
-            crossAxisCount: 4,
+            crossAxisCount: 3,
             childAspectRatio: (3 / 4),
             children: List.generate(
               categoriesList.length,

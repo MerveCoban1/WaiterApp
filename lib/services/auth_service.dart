@@ -6,7 +6,7 @@ import 'package:waiter_app_demo/models/session_model.dart';
 class AuthService {
   String url="https://api.digigarson.org/v1/";
   var dbHelper=DbHelper();
-  Future<SessionModel> loginUser(String email, String password) async {
+  Future<SessionModel> loginUser(String branch_custom_id, String password) async {
     SessionModel _sessionModel;
     String path=url+"waiter/signin";
 
@@ -16,7 +16,7 @@ class AuthService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        "email": email,
+        "branch_custom_id": branch_custom_id,
         "password": password
       }),
     );
@@ -24,8 +24,6 @@ class AuthService {
       Map<String, dynamic> map=json.decode(response.body);
       _sessionModel=SessionModel.fromJson(map);
       dbHelper.insert(_sessionModel).then((value) => {
-        print("veritabanına ekleme sonucu"),
-        print(value),
       });
       return _sessionModel;
     } else {
