@@ -10,7 +10,11 @@ import 'orders_screen.dart';
 class TableScreen extends StatefulWidget {
   TableModel tableModel;
   SessionModel sessionModel;
-  TableScreen(this.tableModel, this.sessionModel);
+  List<Products_AddProduct> productAddProduct;
+  int activeContentNo;
+
+  TableScreen(this.tableModel, this.sessionModel, this.productAddProduct,
+      this.activeContentNo);
 
   @override
   State<TableScreen> createState() => _TableScreenState();
@@ -18,19 +22,19 @@ class TableScreen extends StatefulWidget {
 
 class _TableScreenState extends State<TableScreen> {
   List<Widget> _contents = [];
-  int _activeContentNo = 0;
   var deger = 0;
-  List<Products_AddProduct> productAddProduct=[];
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-    });
+    setState(() {});
     _contents = [
-      TableDetailScreen(widget.tableModel, widget.sessionModel,productAddProduct),
-      CategoryScreen(widget.sessionModel, widget.tableModel,productAddProduct),
-      OrdersScreen(widget.sessionModel, widget.tableModel,productAddProduct)
+      TableDetailScreen(
+          widget.tableModel, widget.sessionModel, widget.productAddProduct),
+      CategoryScreen(
+          widget.sessionModel, widget.tableModel, widget.productAddProduct),
+      OrdersScreen(
+          widget.sessionModel, widget.tableModel, widget.productAddProduct)
     ];
   }
 
@@ -39,7 +43,7 @@ class _TableScreenState extends State<TableScreen> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(143, 148, 251, 1),
       appBar: buildAppBar(context),
-      body: _contents[_activeContentNo],
+      body: _contents[widget.activeContentNo],
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
@@ -48,6 +52,13 @@ class _TableScreenState extends State<TableScreen> {
     return PreferredSize(
       preferredSize: Size.fromHeight(70.0),
       child: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
@@ -59,13 +70,13 @@ class _TableScreenState extends State<TableScreen> {
             child: GestureDetector(
               child: Icon(Icons.shopping_cart),
               onTap: () async {
-                productAddProduct = await Navigator.push(
+                widget.productAddProduct = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            Hamper(widget.sessionModel, productAddProduct, widget.tableModel)));
+                        builder: (context) => Hamper(widget.sessionModel,
+                            widget.productAddProduct, widget.tableModel)));
                 setState(() {
-                  productAddProduct = productAddProduct;
+                  widget.productAddProduct = widget.productAddProduct;
                 });
               },
             ),
@@ -74,7 +85,7 @@ class _TableScreenState extends State<TableScreen> {
             padding: const EdgeInsets.only(right: 20.0, top: 10.0),
             child: Center(
               child: Text(
-                 productAddProduct.length.toString(),
+                widget.productAddProduct.length.toString(),
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -106,7 +117,7 @@ class _TableScreenState extends State<TableScreen> {
   BottomNavigationBar buildBottomNavigationBar() {
     return BottomNavigationBar(
       backgroundColor: Colors.white,
-      currentIndex: _activeContentNo,
+      currentIndex: widget.activeContentNo,
       selectedItemColor: Color.fromRGBO(143, 148, 251, 1),
       unselectedItemColor: Color.fromRGBO(143, 158, 191, 1),
       showSelectedLabels: false,
@@ -127,7 +138,7 @@ class _TableScreenState extends State<TableScreen> {
       ],
       onTap: (int tiklananButonPozisyonNo) {
         setState(() {
-          _activeContentNo = tiklananButonPozisyonNo;
+          widget.activeContentNo = tiklananButonPozisyonNo;
         });
       },
     );

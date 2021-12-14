@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:waiter_app_demo/models/add_product.dart';
+import 'package:waiter_app_demo/models/hamper_product_post_model.dart';
+import 'package:waiter_app_demo/models/hamper_product_push_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 
 class InAppService {
@@ -147,7 +149,6 @@ class InAppService {
     );
     if (response.statusCode == 200) {
       var myOptionsList = json.decode(response.body)['options'];
-      print(myOptionsList);
       return myOptionsList;
     } else {
       throw Exception("İstek durumu başarısız oldu: ${response.reasonPhrase}");
@@ -159,36 +160,28 @@ class InAppService {
       String accessToken,
       List<Products_AddProduct> Products_AddProduct,
       TableModel tableModel) async {
-    var resBody = {};
-    var options = {};
-    var product = {};
+    var OptionList = <OptionsPut>[];
+    var ProductsList = <ProductsPut>[];
     Products_AddProduct.forEach((element) {
       element.options.forEach((element) {
-        options
-            .addAll({"id": "${element.id}", "sub_option": element.subOption});
-        options
-            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+        OptionList.add(
+            OptionsPut(id: element.id, subOption: element.subOption));
       });
-      resBody.addAll({
-        "product": "${element.productId}",
-        "quantity": element.quantity,
-        "price": "${element.priceId}",
-        "options": [options]
-      });
+      ProductsList.add(ProductsPut(
+          product: element.productId,
+          price: element.priceId,
+          quantity: element.quantity,
+          options: OptionList));
     });
-
-    product["products"] = [resBody];
-
     var headers = {
       'x-refresh': '$refreshToken',
       'Authorization': 'Bearer $accessToken',
       'Content-Type': 'application/json'
     };
-    var request = http.Request(
-        'POST', Uri.parse('${url}waiter/orders/${tableModel.id}'));
-    request.body = json.encode(product);
-    print(request.body);
-    print("cdssd${tableModel.id}");
+    var request =
+        http.Request('POST', Uri.parse('${url}waiter/orders/${tableModel.id}'));
+    request.body =
+        json.encode(HamperProductPut(products: ProductsList).toJson());
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -199,30 +192,26 @@ class InAppService {
       print(response.reasonPhrase);
     }
   }
+
   Future<void> putCreateOrder(
       String refreshToken,
       String accessToken,
       List<Products_AddProduct> Products_AddProduct,
       TableModel tableModel) async {
-    var resBody = {};
-    var options = {};
-    var product = {};
+    var OptionList = <OptionsPost>[];
+    var ProductsList = <ProductsPost>[];
     Products_AddProduct.forEach((element) {
       element.options.forEach((element) {
-        options
-            .addAll({"id": "${element.id}", "sub_option": element.subOption});
-        options
-            .addAll({"id": "${element.id}", "sub_option": element.subOption});
+        OptionList.add(
+            OptionsPost(id: element.id, subOption: element.subOption));
       });
-      resBody.addAll({
-        "product": "${element.productId}",
-        "quantity": element.quantity,
-        "price": "${element.priceId}",
-        "options": [options]
-      });
+      ProductsList.add(ProductsPost(
+          product: element.productId,
+          price: element.priceId,
+          quantity: element.quantity,
+          options: OptionList,
+          discount: []));
     });
-
-    product["products"] = [resBody];
 
     var headers = {
       'x-refresh': '$refreshToken',
@@ -231,15 +220,44 @@ class InAppService {
     };
     var request = await http.Request(
         'PUT', Uri.parse('${url}waiter/orders/${tableModel.id}'));
-    request.body = json.encode(product);
-    print(request.body);
+    request.body =
+        json.encode(HamperProductPost(products: ProductsList).toJson());
+    print('Body Put: ${request.body}');
     request.headers.addAll(headers);
+    print("Table Id: ${tableModel.id}");
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
     } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future<void> transferTable(
+      String refreshToken,
+      String accessToken,
+      TableModel tableModel,
+      String targetId) async {
+    var headers = {
+      'x-refresh': '$refreshToken',
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse('${url}waiter/tables/transfer'));
+    request.body = json.encode({
+      "target": "${targetId}",
+      "from": "${tableModel.id}"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
       print(response.reasonPhrase);
     }
   }

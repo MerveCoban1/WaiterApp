@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/table_screen.dart';
@@ -14,9 +15,11 @@ class FloorDetailCard extends StatefulWidget {
 }
 
 class _FloorDetailCardState extends State<FloorDetailCard> {
+  List<Products_AddProduct> productAddProduct = [];
 
   @override
   Widget build(BuildContext context) {
+    var isChecked=false;
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
@@ -87,7 +90,11 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     icon: Icon(Icons.leak_remove_rounded),
                     color: Color.fromRGBO(143, 148, 251, 1),
                     onPressed: () {
-                      //yer değiştirme
+                      isChecked = true;
+                      print(isChecked);
+                      setState(() {
+                        isChecked=isChecked;
+                      });
                     },
                     iconSize: 24,
                   ),
@@ -98,13 +105,26 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TableScreen(
-                              widget.tableModel, widget.sessionModel),
+                          builder: (context) => TableScreen(widget.tableModel,
+                              widget.sessionModel, productAddProduct, 0),
                         ),
                       );
                     },
                     iconSize: 24,
                   ),
+                  isChecked != false
+                      ? Checkbox(
+                          checkColor: Colors.black,
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
+                        )
+                      : Padding(
+                          padding: EdgeInsetsDirectional.zero,
+                        ),
                 ],
               ),
             ),

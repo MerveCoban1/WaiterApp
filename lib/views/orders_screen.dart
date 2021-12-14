@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:waiter_app_demo/models/add_product.dart';
 import 'package:waiter_app_demo/models/orders_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
@@ -27,7 +28,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       tList,
       sList = [],
       pList = [],
-      removList;
+      removList,
+      _width=0.66;
 
   InAppService apiManagerInAppService = InAppService();
   late OrdersModel ordersModel;
@@ -107,6 +109,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         icon: Icon(Icons.edit, size: 22),
                                         onPressed: () {
                                           setState(() {
+                                            _width=0.5;
                                             edit[index1] = !edit[index1];
                                           });
                                         },
@@ -132,128 +135,209 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            '${tList[index1][index2]['quantity']}x',
-                                            style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 16,
-                                                letterSpacing: 0.3,
-                                                height: 1.3),
-                                          ),
-                                          Text(
-                                            '${tList[index1][index2]['productName']}',
-                                            style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 16,
-                                                letterSpacing: 0.3,
-                                                height: 1.3),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${tList[index1][index2]['price']}₺',
-                                                style: TextStyle(
-                                                    color: Colors.grey[700],
+                                          Container(
+                                            child: Center(
+                                              child: GestureDetector(
+                                                child: Text(
+                                                  tList[index1][index2]
+                                                          ['quantity']
+                                                      .toString(),
+                                                  style: TextStyle(
                                                     fontSize: 16,
-                                                    letterSpacing: 0.3,
-                                                    height: 1.3),
-                                              ),
-                                              edit[index1] == true
-                                                  ? Container(
-                                                      width: width * 0.28,
-                                                      child: Row(
-                                                        children: [
-                                                          IconButton(
-                                                            color: Colors
-                                                                .redAccent,
-                                                            icon: Icon(
-                                                                Icons
-                                                                    .delete_forever,
-                                                                size: 22),
-                                                            onPressed: () {
-                                                              InAppService
-                                                                  deleteOrders =
-                                                                  InAppService();
-                                                              deleteOrders.deleteOrders(
-                                                                  widget
-                                                                      .sessionModel
-                                                                      .refreshToken,
-                                                                  widget
-                                                                      .sessionModel
-                                                                      .accessToken,
-                                                                  widget
-                                                                      .tableModel
-                                                                      .id,
-                                                                  tList[index1][
-                                                                          index2]
-                                                                      ['_id'],
-                                                                  tList[index1][
-                                                                          index2]
-                                                                      [
-                                                                      'productId'],
-                                                                  removList[
+                                                    color: Color.fromRGBO(
+                                                        143, 158, 191, 1),
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  if(edit[index1]==true){
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            StatefulBuilder(builder:
+                                                                (BuildContext
+                                                            context,
+                                                                StateSetter
+                                                                setModalState) {
+                                                              return AlertDialog(
+                                                                contentPadding:
+                                                                EdgeInsetsDirectional
+                                                                    .only(
+                                                                    bottom: 0),
+                                                                actionsPadding:
+                                                                EdgeInsetsDirectional
+                                                                    .all(0),
+                                                                title: Center(
+                                                                    child: new Text(
+                                                                      tList[index1][index2]
+                                                                      ['productName'],
+                                                                      style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        color:
+                                                                        Color.fromRGBO(
+                                                                            143,
+                                                                            158,
+                                                                            191,
+                                                                            1),
+                                                                        fontWeight:
+                                                                        FontWeight.w900,
+                                                                      ),
+                                                                    )),
+                                                                content: Container(
+                                                                  height: height * 0.22,
+                                                                  child: Column(
+                                                                    children: <Widget>[
+                                                                      SizedBox(
+                                                                          height: 7),
+                                                                      Text(
+                                                                        'Adet Seçimi',
+                                                                        style:
+                                                                        TextStyle(
+                                                                          fontSize: 16,
+                                                                          color: Color
+                                                                              .fromRGBO(
+                                                                              143,
+                                                                              158,
+                                                                              191,
+                                                                              1),
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                        ),
+                                                                      ),
+                                                                      NumberPicker(
+                                                                          value: tList[
                                                                           index1]
-                                                                      [index2]);
-                                                              getOrders();
-                                                              listGet();
-                                                            },
-                                                          ),
-                                                          Container(
-                                                            child: Center(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Container(
-                                                                      child: FloatingActionButton(
-                                                                          onPressed: () {
-                                                                            removList[index1][index2] +=
-                                                                                1;
-                                                                            setState(() {
-                                                                              removList = removList;
-                                                                            });
-                                                                          },
-                                                                          child: Icon(Icons.add, color: Colors.black),
-                                                                          backgroundColor: Colors.white),
-                                                                      width: width * 0.06,
-                                                                      height: height * 0.05),
-                                                                  Text(
-                                                                    removList[index1]
-                                                                            [
-                                                                            index2]
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            16.0),
+                                                                          [
+                                                                          index2]
+                                                                          [
+                                                                          'quantity'],
+                                                                          minValue: 1,
+                                                                          maxValue: 100,
+                                                                          step: 1,
+                                                                          onChanged:
+                                                                              (value) =>
+                                                                              setModalState(
+                                                                                      () {
+                                                                                    tList[index1][index2]['quantity'] =
+                                                                                        value;
+                                                                                  })),
+                                                                    ],
                                                                   ),
-                                                                  Container(
-                                                                      child: FloatingActionButton(
-                                                                          onPressed: () {
-                                                                            if (removList[index1][index2] !=
-                                                                                0)
-                                                                              removList[index1][index2] -= 1;
-                                                                            setState(() {
-                                                                              removList = removList;
-                                                                            });
-                                                                          },
-                                                                          child: Icon(Icons.remove, color: Colors.black),
-                                                                          backgroundColor: Colors.white),
-                                                                      width: width * 0.06,
-                                                                      height: height * 0.05),
+                                                                ),
+                                                                actions: <Widget>[
+                                                                  // usually buttons at the bottom of the dialog
+                                                                  Center(
+                                                                    child:
+                                                                    TextButton(
+                                                                      child: Text(
+                                                                          "Tamam"),
+                                                                      style: TextButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                        Color
+                                                                            .fromRGBO(
+                                                                            143,
+                                                                            148,
+                                                                            251,
+                                                                            1),
+                                                                        textStyle: TextStyle(
+                                                                            fontSize:
+                                                                            20,
+                                                                            fontStyle:
+                                                                            FontStyle
+                                                                                .italic),
+                                                                        primary: Colors
+                                                                            .white,
+                                                                        minimumSize:
+                                                                        Size(
+                                                                            95, 45),
+                                                                        padding: EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                            16.0),
+                                                                        shape:
+                                                                        const BeveledRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(
+                                                                                  7)),
+                                                                        ),
+                                                                      ),
+                                                                      onPressed: () {
+                                                                        setState(() {
+                                                                          tList[index1][
+                                                                          index2]
+                                                                          [
+                                                                          'quantity'] = tList[
+                                                                          index1]
+                                                                          [
+                                                                          index2]
+                                                                          [
+                                                                          'quantity'];
+
+                                                                        });
+                                                                        Navigator.of(
+                                                                            context)
+                                                                            .pop();
+                                                                      },
+                                                                    ),
+                                                                  ),
                                                                 ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : Padding(
-                                                      padding: EdgeInsets.zero,
-                                                    ),
-                                            ],
+                                                              );
+                                                            }),);
+                                                  }
+                                                },
+                                              ),
+                                            ),
                                           ),
+                                          Container(
+                                            width:width*_width,
+                                            child: Center(
+                                              child: Text(
+                                                '${tList[index1][index2]['productName']}',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Color.fromRGBO(
+                                                      143, 158, 191, 1),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '${tList[index1][index2]['price']}₺',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Color.fromRGBO(
+                                                  143, 158, 191, 1),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          if (edit[index1] == true)
+                                            IconButton(
+                                              color: Colors.redAccent,
+                                              icon: Icon(Icons.delete_forever,
+                                                  size: 22),
+                                              onPressed: () {
+                                                InAppService deleteOrders =
+                                                    InAppService();
+                                                deleteOrders.deleteOrders(
+                                                    widget.sessionModel
+                                                        .refreshToken,
+                                                    widget.sessionModel
+                                                        .accessToken,
+                                                    widget.tableModel.id,
+                                                    tList[index1][index2]
+                                                        ['_id'],
+                                                    tList[index1][index2]
+                                                        ['productId'],
+                                                    removList[index1][index2]);
+                                                getOrders();
+                                                listGet();
+                                              },
+                                            ),
                                         ],
                                       ),
                                     );
@@ -267,10 +351,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     child: Text(
                                       "Toplam Tutar: ${pList[index1]}₺",
                                       style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontSize: 16,
-                                          letterSpacing: 0.3,
-                                          height: 1.3),
+                                        fontSize: 16,
+                                        color: Color.fromRGBO(
+                                            143, 158, 191, 1),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -331,10 +416,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  void add(int index1, int index2) {}
-
-  void minus(int index1, int index2) {}
-
   int listGet() {
     var arrayLenght = 0,
         i = 0,
@@ -369,7 +450,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       element.forEach((_element) {
         if (_element.isNotEmpty) {
           sayac++;
-          totalPrice += (_element['price'] as double);
+          totalPrice += (_element['price'].toDouble());
           empty = false;
         }
       });

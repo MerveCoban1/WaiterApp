@@ -305,17 +305,22 @@ class _HamperState extends State<Hamper> {
                           borderRadius: BorderRadius.all(Radius.circular(7)),
                         ),
                       ),
-                      onPressed: () {
-                        widget.tableModel.busy?
-                        apiManagerInAppService.putCreateOrder(
-                            widget.sessionModel.refreshToken,
-                            widget.sessionModel.accessToken,
-                            widget.hamper,
-                            widget.tableModel):apiManagerInAppService.postCreateOrder(
-                            widget.sessionModel.refreshToken,
-                            widget.sessionModel.accessToken,
-                            widget.hamper,
-                            widget.tableModel);
+                      onPressed: () async {
+                        widget.tableModel.busy
+                            ? await apiManagerInAppService.putCreateOrder(
+                                widget.sessionModel.refreshToken,
+                                widget.sessionModel.accessToken,
+                                widget.hamper,
+                                widget.tableModel)
+                            : await apiManagerInAppService.postCreateOrder(
+                                widget.sessionModel.refreshToken,
+                                widget.sessionModel.accessToken,
+                                widget.hamper,
+                                widget.tableModel);
+                        setState(() {
+                          widget.hamper = [];
+                        });
+                        Navigator.pop(context, widget.hamper);
                       },
                       child: Text('Sepeti Onayla'),
                     ),
