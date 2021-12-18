@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:waiter_app_demo/models/add_product.dart';
+import 'package:waiter_app_demo/models/section_model.dart';
 import 'package:waiter_app_demo/models/session_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
 import 'package:waiter_app_demo/views/table_screen.dart';
+import 'package:waiter_app_demo/views/table_transfer_for_screen.dart';
 
 class FloorDetailCard extends StatefulWidget {
   TableModel tableModel;
   SessionModel sessionModel;
+  SectionModel sectionModel;
+  var emptyTableList = [];
 
-  FloorDetailCard(this.tableModel, this.sessionModel);
+  FloorDetailCard(this.tableModel, this.sessionModel, this.emptyTableList,
+      this.sectionModel);
 
   @override
   _FloorDetailCardState createState() => _FloorDetailCardState();
@@ -16,10 +21,11 @@ class FloorDetailCard extends StatefulWidget {
 
 class _FloorDetailCardState extends State<FloorDetailCard> {
   List<Products_AddProduct> productAddProduct = [];
+  Color color = Color.fromRGBO(143, 148, 251, 1);
+  Color _color = Color.fromRGBO(143, 158, 191, 1);
 
   @override
   Widget build(BuildContext context) {
-    var isChecked=false;
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
@@ -51,11 +57,11 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                 child: (widget.tableModel.busy)
                     ? Icon(
                         Icons.check_circle,
-                        color: Color.fromRGBO(143, 148, 251, 1),
+                        color: color,
                       )
                     : Icon(
                         Icons.remove_circle_outlined,
-                        color: Color.fromRGBO(143, 158, 191, 1),
+                        color: _color,
                       ),
               ),
             ),
@@ -68,7 +74,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                   style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(143, 158, 191, 1),
+                    color: color,
                   ),
                 ),
               ),
@@ -80,7 +86,7 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.print),
-                    color: Color.fromRGBO(143, 148, 251, 1),
+                    color: color,
                     onPressed: () {
                       //yazdır
                     },
@@ -88,19 +94,26 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                   ),
                   IconButton(
                     icon: Icon(Icons.leak_remove_rounded),
-                    color: Color.fromRGBO(143, 148, 251, 1),
-                    onPressed: () {
-                      isChecked = true;
-                      print(isChecked);
-                      setState(() {
-                        isChecked=isChecked;
-                      });
-                    },
+                    color: color,
+                    onPressed: widget.tableModel.busy == true
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TableTransferSelect(
+                                    widget.emptyTableList,
+                                    widget.tableModel,
+                                    widget.sessionModel,
+                                    widget.sectionModel),
+                              ),
+                            );
+                          }
+                        : null,
                     iconSize: 24,
                   ),
                   IconButton(
                     icon: Icon(Icons.play_arrow_sharp),
-                    color: Color.fromRGBO(143, 148, 251, 1),
+                    color: color,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -112,19 +125,6 @@ class _FloorDetailCardState extends State<FloorDetailCard> {
                     },
                     iconSize: 24,
                   ),
-                  isChecked != false
-                      ? Checkbox(
-                          checkColor: Colors.black,
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                        )
-                      : Padding(
-                          padding: EdgeInsetsDirectional.zero,
-                        ),
                 ],
               ),
             ),

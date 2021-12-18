@@ -117,16 +117,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: const EdgeInsets.only(right: 10.0, top: 11.0),
             child: GestureDetector(
               child: Icon(Icons.shopping_cart),
-              onTap: () async {
-                productAddProduct = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Hamper(widget.sessionModel,
-                            productAddProduct, widget.tableModel)));
-                setState(() {
-                  productAddProduct = productAddProduct;
-                });
-              },
+              onTap: widget.productAddProduct.isNotEmpty
+                  ? () async {
+                      productAddProduct = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Hamper(widget.sessionModel,
+                                  productAddProduct, widget.tableModel)));
+                      setState(() {
+                        productAddProduct = productAddProduct;
+                      });
+                    }
+                  : null,
             ),
           ),
           Padding(

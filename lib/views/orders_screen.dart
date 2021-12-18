@@ -28,8 +28,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       tList,
       sList = [],
       pList = [],
-      removList,
-      _width=0.66;
+      _width = 0.66;
 
   InAppService apiManagerInAppService = InAppService();
   late OrdersModel ordersModel;
@@ -73,10 +72,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0).copyWith(top: 0, bottom: 0),
             child: Container(
               width: width,
-              height: height * 0.69,
+              height: height * 0.7,
               color: Colors.white,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -85,10 +84,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 itemBuilder: (BuildContext context, int index1) {
                   var _ordersList = ordersList;
                   return Padding(
-                    padding: const EdgeInsets.all(8.0).copyWith(top: 0),
+                    padding:
+                        const EdgeInsets.all(8.0).copyWith(top: 0, bottom: 0),
                     child: ExpansionPanelList(
                       animationDuration: Duration(milliseconds: 1000),
-                      dividerColor: Colors.red,
                       elevation: 1,
                       children: [
                         ExpansionPanel(
@@ -109,15 +108,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         icon: Icon(Icons.edit, size: 22),
                                         onPressed: () {
                                           setState(() {
-                                            _width=0.5;
+                                            _width = 0.5;
                                             edit[index1] = !edit[index1];
                                           });
                                         },
-                                      ),
-                                      IconButton(
-                                        color: Colors.lightBlue,
-                                        icon: Icon(Icons.add, size: 22),
-                                        onPressed: () {},
                                       ),
                                     ],
                                   ),
@@ -150,149 +144,150 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   ),
                                                 ),
                                                 onTap: () {
-                                                  if(edit[index1]==true){
+                                                  if (edit[index1] == true) {
                                                     showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            StatefulBuilder(builder:
-                                                                (BuildContext
-                                                            context,
-                                                                StateSetter
-                                                                setModalState) {
-                                                              return AlertDialog(
-                                                                contentPadding:
-                                                                EdgeInsetsDirectional
-                                                                    .only(
-                                                                    bottom: 0),
-                                                                actionsPadding:
-                                                                EdgeInsetsDirectional
-                                                                    .all(0),
-                                                                title: Center(
-                                                                    child: new Text(
-                                                                      tList[index1][index2]
-                                                                      ['productName'],
-                                                                      style: TextStyle(
-                                                                        fontSize: 16,
-                                                                        color:
-                                                                        Color.fromRGBO(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          StatefulBuilder(builder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  StateSetter
+                                                                      setModalState) {
+                                                        return AlertDialog(
+                                                          contentPadding:
+                                                              EdgeInsetsDirectional
+                                                                  .only(
+                                                                      bottom:
+                                                                          0),
+                                                          actionsPadding:
+                                                              EdgeInsetsDirectional
+                                                                  .all(0),
+                                                          title: Center(
+                                                              child: new Text(
+                                                            tList[index1]
+                                                                    [index2]
+                                                                ['productName'],
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      143,
+                                                                      158,
+                                                                      191,
+                                                                      1),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w900,
+                                                            ),
+                                                          )),
+                                                          content: Container(
+                                                            height:
+                                                                height * 0.22,
+                                                            child: Column(
+                                                              children: <
+                                                                  Widget>[
+                                                                SizedBox(
+                                                                    height: 7),
+                                                                Text(
+                                                                  'Adet Seçimi',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Color
+                                                                        .fromRGBO(
                                                                             143,
                                                                             158,
                                                                             191,
                                                                             1),
-                                                                        fontWeight:
-                                                                        FontWeight.w900,
-                                                                      ),
-                                                                    )),
-                                                                content: Container(
-                                                                  height: height * 0.22,
-                                                                  child: Column(
-                                                                    children: <Widget>[
-                                                                      SizedBox(
-                                                                          height: 7),
-                                                                      Text(
-                                                                        'Adet Seçimi',
-                                                                        style:
-                                                                        TextStyle(
-                                                                          fontSize: 16,
-                                                                          color: Color
-                                                                              .fromRGBO(
-                                                                              143,
-                                                                              158,
-                                                                              191,
-                                                                              1),
-                                                                          fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                        ),
-                                                                      ),
-                                                                      NumberPicker(
-                                                                          value: tList[
-                                                                          index1]
-                                                                          [
-                                                                          index2]
-                                                                          [
-                                                                          'quantity'],
-                                                                          minValue: 1,
-                                                                          maxValue: 100,
-                                                                          step: 1,
-                                                                          onChanged:
-                                                                              (value) =>
-                                                                              setModalState(
-                                                                                      () {
-                                                                                    tList[index1][index2]['quantity'] =
-                                                                                        value;
-                                                                                  })),
-                                                                    ],
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
                                                                   ),
                                                                 ),
-                                                                actions: <Widget>[
-                                                                  // usually buttons at the bottom of the dialog
-                                                                  Center(
-                                                                    child:
-                                                                    TextButton(
-                                                                      child: Text(
-                                                                          "Tamam"),
-                                                                      style: TextButton
-                                                                          .styleFrom(
-                                                                        backgroundColor:
-                                                                        Color
-                                                                            .fromRGBO(
-                                                                            143,
-                                                                            148,
-                                                                            251,
-                                                                            1),
-                                                                        textStyle: TextStyle(
-                                                                            fontSize:
-                                                                            20,
-                                                                            fontStyle:
-                                                                            FontStyle
-                                                                                .italic),
-                                                                        primary: Colors
-                                                                            .white,
-                                                                        minimumSize:
-                                                                        Size(
-                                                                            95, 45),
-                                                                        padding: EdgeInsets
-                                                                            .symmetric(
-                                                                            horizontal:
-                                                                            16.0),
-                                                                        shape:
-                                                                        const BeveledRectangleBorder(
-                                                                          borderRadius:
-                                                                          BorderRadius.all(
-                                                                              Radius.circular(
-                                                                                  7)),
-                                                                        ),
-                                                                      ),
-                                                                      onPressed: () {
-                                                                        setState(() {
-                                                                          tList[index1][
-                                                                          index2]
-                                                                          [
-                                                                          'quantity'] = tList[
-                                                                          index1]
-                                                                          [
-                                                                          index2]
-                                                                          [
-                                                                          'quantity'];
-
-                                                                        });
-                                                                        Navigator.of(
-                                                                            context)
-                                                                            .pop();
-                                                                      },
-                                                                    ),
+                                                                NumberPicker(
+                                                                    value: tList[index1]
+                                                                            [index2]
+                                                                        [
+                                                                        'quantity'],
+                                                                    minValue: 1,
+                                                                    maxValue:
+                                                                        100,
+                                                                    step: 1,
+                                                                    onChanged: (value) =>
+                                                                        setModalState(
+                                                                            () {
+                                                                          tList[index1][index2]['quantity'] =
+                                                                              value;
+                                                                        })),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            // usually buttons at the bottom of the dialog
+                                                            Center(
+                                                              child: TextButton(
+                                                                child: Text(
+                                                                    "Tamam"),
+                                                                style: TextButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      Color.fromRGBO(
+                                                                          143,
+                                                                          148,
+                                                                          251,
+                                                                          1),
+                                                                  textStyle: TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontStyle:
+                                                                          FontStyle
+                                                                              .italic),
+                                                                  primary: Colors
+                                                                      .white,
+                                                                  minimumSize:
+                                                                      Size(95,
+                                                                          45),
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              16.0),
+                                                                  shape:
+                                                                      const BeveledRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(7)),
                                                                   ),
-                                                                ],
-                                                              );
-                                                            }),);
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    tList[index1]
+                                                                            [
+                                                                            index2]
+                                                                        [
+                                                                        'quantity'] = tList[index1]
+                                                                            [
+                                                                            index2]
+                                                                        [
+                                                                        'quantity'];
+                                                                  });
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }),
+                                                    );
                                                   }
                                                 },
                                               ),
                                             ),
                                           ),
                                           Container(
-                                            width:width*_width,
+                                            width: width * _width,
                                             child: Center(
                                               child: Text(
                                                 '${tList[index1][index2]['productName']}',
@@ -320,21 +315,21 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               color: Colors.redAccent,
                                               icon: Icon(Icons.delete_forever,
                                                   size: 22),
-                                              onPressed: () {
-                                                InAppService deleteOrders =
-                                                    InAppService();
-                                                deleteOrders.deleteOrders(
-                                                    widget.sessionModel
-                                                        .refreshToken,
-                                                    widget.sessionModel
-                                                        .accessToken,
-                                                    widget.tableModel.id,
-                                                    tList[index1][index2]
-                                                        ['_id'],
-                                                    tList[index1][index2]
-                                                        ['productId'],
-                                                    removList[index1][index2]);
-                                                getOrders();
+                                              onPressed: () async {
+                                                apiManagerInAppService
+                                                    .deleteOrders(
+                                                        widget.sessionModel
+                                                            .refreshToken,
+                                                        widget.sessionModel
+                                                            .accessToken,
+                                                        widget.tableModel.id,
+                                                        tList[index1][index2]
+                                                            ['_id'],
+                                                        tList[index1][index2]
+                                                            ['productId'],
+                                                        tList[index1][index2]
+                                                            ['quantity']);
+                                                await getOrders();
                                                 listGet();
                                               },
                                             ),
@@ -352,8 +347,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       "Toplam Tutar: ${pList[index1]}₺",
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Color.fromRGBO(
-                                            143, 158, 191, 1),
+                                        color: Color.fromRGBO(143, 158, 191, 1),
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -423,7 +417,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         first = 0,
         a = ordersList.length,
         b = ordersList.length;
-    removList = List.generate(a, (i) => List.filled(b, 0, growable: false));
+    sList=[];
     tList = List.generate(a, (i) => List.filled(b, Map(), growable: false),
         growable: false);
     var groupByDate = groupBy(
@@ -462,9 +456,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
     });
 
     setState(() {
+      dimeonsion=arrayLenght;
       tList = tList;
       sList = sList;
-      removList;
     });
     return arrayLenght;
   }
@@ -474,8 +468,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         widget.sessionModel.refreshToken.toString(),
         widget.sessionModel.accessToken.toString(),
         widget.tableModel.id.toString());
-    if (_ordersList.isEmpty) {
-    } else {
+    if (_ordersList.isNotEmpty) {
       setState(() {
         ordersList = _ordersList;
         exp = (List.generate(ordersList.length, (index) => false));

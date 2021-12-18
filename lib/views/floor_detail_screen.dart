@@ -17,6 +17,7 @@ class FloorDetailScreen extends StatefulWidget {
 
 class _FloorDetailScreenState extends State<FloorDetailScreen> {
   var tableList = [];
+  var emptyTableList = [];
   InAppService apiManagerInAppService = InAppService();
   late TableModel tableModel;
 
@@ -59,7 +60,8 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
                 itemCount: tableList.length,
                 itemBuilder: (BuildContext context, int index) {
                   tableModel = TableModel.fromJson(tableList[index]);
-                  return FloorDetailCard(tableModel, widget.sessionModel);
+                  return FloorDetailCard(tableModel, widget.sessionModel,
+                      emptyTableList, widget.sectionModel);
                 }),
           ),
         ),
@@ -91,7 +93,13 @@ class _FloorDetailScreenState extends State<FloorDetailScreen> {
     if (tableListComing.isEmpty) {
       print("hata");
     } else {
+      tableListComing.forEach((element) {
+        if (element['busy'] != true) {
+          emptyTableList.add(element);
+        }
+      });
       setState(() {
+        emptyTableList = emptyTableList;
         tableList = tableListComing;
       });
     }

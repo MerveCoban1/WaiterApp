@@ -155,7 +155,7 @@ class InAppService {
     }
   }
 
-  Future<void> postCreateOrder(
+  Future<bool> postCreateOrder(
       String refreshToken,
       String accessToken,
       List<Products_AddProduct> Products_AddProduct,
@@ -188,8 +188,10 @@ class InAppService {
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
+      return true;
     } else {
       print(response.reasonPhrase);
+      return false;
     }
   }
 
@@ -235,7 +237,7 @@ class InAppService {
     }
   }
 
-  Future<void> transferTable(
+  Future<bool> transferTable(
       String refreshToken,
       String accessToken,
       TableModel tableModel,
@@ -256,9 +258,11 @@ class InAppService {
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
+      return true;
     }
     else {
       print(response.reasonPhrase);
+      return false;
     }
   }
 }

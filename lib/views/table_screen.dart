@@ -55,6 +55,7 @@ class _TableScreenState extends State<TableScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
+            ScaffoldMessenger.of(context).clearSnackBars();
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -69,7 +70,7 @@ class _TableScreenState extends State<TableScreen> {
             padding: const EdgeInsets.only(right: 10.0, top: 11.0),
             child: GestureDetector(
               child: Icon(Icons.shopping_cart),
-              onTap: () async {
+              onTap: widget.productAddProduct.isNotEmpty? () async {
                 widget.productAddProduct = await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -78,7 +79,7 @@ class _TableScreenState extends State<TableScreen> {
                 setState(() {
                   widget.productAddProduct = widget.productAddProduct;
                 });
-              },
+              }:null,
             ),
           ),
           Padding(
@@ -137,9 +138,28 @@ class _TableScreenState extends State<TableScreen> {
         ),
       ],
       onTap: (int tiklananButonPozisyonNo) {
-        setState(() {
-          widget.activeContentNo = tiklananButonPozisyonNo;
-        });
+        ScaffoldMessenger.of(context).clearSnackBars();
+        if (tiklananButonPozisyonNo != 2) {
+          setState(() {
+            widget.activeContentNo = tiklananButonPozisyonNo;
+          });
+        } else if (widget.tableModel.orders.isNotEmpty) {
+          setState(() {
+            widget.activeContentNo = tiklananButonPozisyonNo;
+          });
+        } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                "Masada Sipariş Bulunmamaktadır.",
+                style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            ));
+
+        }
       },
     );
   }

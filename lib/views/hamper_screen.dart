@@ -264,7 +264,7 @@ class _HamperState extends State<Hamper> {
             child: Row(
               children: [
                 Container(
-                  width: width * 0.27,
+                  width: width * 0.26,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -291,6 +291,7 @@ class _HamperState extends State<Hamper> {
                   ),
                 ),
                 Container(
+                  width: width * 0.22,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: TextButton(
@@ -305,23 +306,38 @@ class _HamperState extends State<Hamper> {
                           borderRadius: BorderRadius.all(Radius.circular(7)),
                         ),
                       ),
-                      onPressed: () async {
-                        widget.tableModel.busy
-                            ? await apiManagerInAppService.putCreateOrder(
-                                widget.sessionModel.refreshToken,
-                                widget.sessionModel.accessToken,
-                                widget.hamper,
-                                widget.tableModel)
-                            : await apiManagerInAppService.postCreateOrder(
-                                widget.sessionModel.refreshToken,
-                                widget.sessionModel.accessToken,
-                                widget.hamper,
-                                widget.tableModel);
-                        setState(() {
-                          widget.hamper = [];
-                        });
-                        Navigator.pop(context, widget.hamper);
-                      },
+                      onPressed: widget.hamper.isNotEmpty
+                          ? () async {
+                              if (widget.tableModel.busy) {
+                                await apiManagerInAppService.putCreateOrder(
+                                    widget.sessionModel.refreshToken,
+                                    widget.sessionModel.accessToken,
+                                    widget.hamper,
+                                    widget.tableModel);
+                              } else {
+                                await apiManagerInAppService.postCreateOrder(
+                                    widget.sessionModel.refreshToken,
+                                    widget.sessionModel.accessToken,
+                                    widget.hamper,
+                                    widget.tableModel);
+                              }
+                              setState(() {
+                                widget.hamper = [];
+                              });
+                              Navigator.pop(context, widget.hamper);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  "Sipariş Verildi",
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ));
+                            }
+                          : null,
                       child: Text('Sepeti Onayla'),
                     ),
                   ),
