@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:waiter_app_demo/models/add_product.dart';
+import 'package:waiter_app_demo/models/all_orders.dart';
 import 'package:waiter_app_demo/models/hamper_product_post_model.dart';
 import 'package:waiter_app_demo/models/hamper_product_push_model.dart';
 import 'package:waiter_app_demo/models/table_model.dart';
@@ -106,6 +107,24 @@ class InAppService {
     if (response.statusCode == 200) {
       var ordersList = json.decode(response.body)['orders'];
       return ordersList;
+    } else {
+      throw Exception("İstek durumu başarısız oldu: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<List<AllOrders>> getAllOrders(
+      String refreshToken, String accessToken) async {
+    final http.Response response = await http.get(
+      Uri.parse('${url}waiter/orders'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-refresh': refreshToken,
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      var list =json.decode(response.body) as List;
+      return  (list).map((e) => AllOrders.fromJson(e)).toList();
     } else {
       throw Exception("İstek durumu başarısız oldu: ${response.reasonPhrase}");
     }
@@ -224,9 +243,7 @@ class InAppService {
         'PUT', Uri.parse('${url}waiter/orders/${tableModel.id}'));
     request.body =
         json.encode(HamperProductPost(products: ProductsList).toJson());
-    print('Body Put: ${request.body}');
     request.headers.addAll(headers);
-    print("Table Id: ${tableModel.id}");
 
     http.StreamedResponse response = await request.send();
 
@@ -237,21 +254,17 @@ class InAppService {
     }
   }
 
-  Future<bool> transferTable(
-      String refreshToken,
-      String accessToken,
-      TableModel tableModel,
-      String targetId) async {
+  Future<bool> transferTable(String refreshToken, String accessToken,
+      TableModel tableModel, String targetId) async {
     var headers = {
       'x-refresh': '$refreshToken',
       'Authorization': 'Bearer $accessToken',
       'Content-Type': 'application/json'
     };
-    var request = http.Request('POST', Uri.parse('${url}waiter/tables/transfer'));
-    request.body = json.encode({
-      "target": "${targetId}",
-      "from": "${tableModel.id}"
-    });
+    var request =
+        http.Request('POST', Uri.parse('${url}waiter/tables/transfer'));
+    request.body =
+        json.encode({"target": "${targetId}", "from": "${tableModel.id}"});
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -259,8 +272,7 @@ class InAppService {
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
       return true;
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
       return false;
     }

@@ -256,7 +256,7 @@ class _HamperState extends State<Hamper> {
           ),
         ),
         Align(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.bottomLeft,
           child: Container(
             color: Colors.white,
             width: width,
@@ -295,6 +295,7 @@ class _HamperState extends State<Hamper> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: TextButton(
+                      child: Text('Sepeti Onayla'),
                       style: TextButton.styleFrom(
                         backgroundColor: Color.fromRGBO(143, 148, 251, 1),
                         textStyle: TextStyle(
@@ -338,7 +339,6 @@ class _HamperState extends State<Hamper> {
                               ));
                             }
                           : null,
-                      child: Text('Sepeti Onayla'),
                     ),
                   ),
                 ),

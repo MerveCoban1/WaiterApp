@@ -80,7 +80,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             widget.productAddProduct),
                       ),
                     );
-
                   },
                   child: Container(
                     child: Column(
@@ -106,6 +105,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Text(
                             categoryModel.title,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,

@@ -31,7 +31,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       currency,
       items = <String>[],
       itemsId,
-      optionsList = <Options>[],
+      optionsList = <Options_>[],
       product = <Product>[],
       productAddProduct,
       options = <Optionn>[],
@@ -48,11 +48,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    late Options? deger;
+    late Options_? deger;
     widget.productModel.options != null
         ? widget.productModel.options.forEach((element) {
             if (element != null) {
-              deger = getOptions(element);
+              deger = getOptions(element.optionId);
               if (deger != null) {
                 optionsList.add(deger!);
                 dropdownvaluelist.add(deger!.items.first.itemName.toString());
@@ -61,7 +61,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Options_AddProduct oop = Options_AddProduct(
                     id: deger!.sId,
                     subOption: subOption,
-                    option_name: deger!.optionName,
+                    option_name: deger!.name,
                     subOptionReply: deger!.items.first.itemName);
                 options_.add(oop);
               }
@@ -431,7 +431,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 width: width,
                                                 child: Text(
                                                   optionsList[index]
-                                                      .optionSpecialName,
+                                                      .specialName,
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     color: Color.fromRGBO(
@@ -493,7 +493,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                                 option_name:
                                                                     optionsList[
                                                                             index]
-                                                                        .optionName,
+                                                                        .name,
                                                                 subOptionReply:
                                                                     items
                                                                         .itemName);
@@ -589,13 +589,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Options? getOptions(String id) {
-    late Options options;
+  Options_? getOptions(String id) {
+    late Options_ options;
     var i = 0;
     widget.myOptionsList.forEach((element) {
       if (element['_id'] == id) {
         i++;
-        options = Options.fromJson(element);
+        options = Options_.fromJson(element);
       }
     });
     if (i != 0) {

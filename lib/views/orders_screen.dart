@@ -28,7 +28,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       tList,
       sList = [],
       pList = [],
-      _width = 0.66;
+      _width = 0.66,
+      siparisNo = 0;
 
   InAppService apiManagerInAppService = InAppService();
   late OrdersModel ordersModel;
@@ -75,7 +76,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             padding: const EdgeInsets.all(15.0).copyWith(top: 0, bottom: 0),
             child: Container(
               width: width,
-              height: height * 0.7,
+              height: height * 0.75,
               color: Colors.white,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -316,7 +317,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               icon: Icon(Icons.delete_forever,
                                                   size: 22),
                                               onPressed: () async {
-                                                apiManagerInAppService
+                                                await apiManagerInAppService
                                                     .deleteOrders(
                                                         widget.sessionModel
                                                             .refreshToken,
@@ -330,7 +331,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                         tList[index1][index2]
                                                             ['quantity']);
                                                 await getOrders();
-                                                listGet();
+                                                await listGet();
                                               },
                                             ),
                                         ],
@@ -368,11 +369,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 dateDay[1] +
                                 "/" +
                                 dateDay[0];
+
                             return Container(
                               padding: EdgeInsets.all(10),
                               child: ListTile(
                                 title: Text(
-                                  "Sipariş No: 12345",
+                                  "Sipariş No: ${index1 + 1}",
                                   style: TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
@@ -411,56 +413,63 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   int listGet() {
-    var arrayLenght = 0,
-        i = 0,
-        j = 0,
-        first = 0,
-        a = ordersList.length,
-        b = ordersList.length;
-    sList=[];
-    tList = List.generate(a, (i) => List.filled(b, Map(), growable: false),
-        growable: false);
-    var groupByDate = groupBy(
-        ordersList, (obj) => (obj as Map)['createdAt'].substring(0, 10));
-    groupByDate.forEach((date, list) {
-      list.forEach((listItem) {
-        var _createAt = (listItem as Map)['createdAt'];
-        if (first == 0) {
-          tList[i][j] = listItem;
-          first++;
-        } else if ((tList[i][j] as Map)['createdAt'].toString() !=
-            _createAt.toString()) {
-          i++;
-          j = 0;
-          tList[i][j] = listItem;
-        } else {
-          j++;
-          tList[i][j] = listItem;
+    if (ordersList.length != 0) {
+      var arrayLenght = 0,
+          i = 0,
+          j = 0,
+          first = 0,
+          a = ordersList.length,
+          b = ordersList.length;
+      sList = [];
+      tList = List.generate(a, (i) => List.filled(b, Map(), growable: false),
+          growable: false);
+      var groupByDate = groupBy(
+          ordersList, (obj) => (obj as Map)['createdAt'].substring(0, 10));
+      groupByDate.forEach((date, list) {
+        list.forEach((listItem) {
+          var _createAt = (listItem as Map)['createdAt'];
+          if (first == 0) {
+            tList[i][j] = listItem;
+            first++;
+          } else if ((tList[i][j] as Map)['createdAt'].toString() !=
+              _createAt.toString()) {
+            i++;
+            j = 0;
+            tList[i][j] = listItem;
+          } else {
+            j++;
+            tList[i][j] = listItem;
+          }
+        });
+      });
+      tList.forEach((element) {
+        var sayac = 0, totalPrice = 0.0, empty = true;
+        element.forEach((_element) {
+          if (_element.isNotEmpty) {
+            sayac++;
+            totalPrice += (_element['price'].toDouble());
+            empty = false;
+          }
+        });
+        if (!empty) {
+          sList.add(sayac);
+          pList.add(totalPrice);
+          arrayLenght++;
         }
       });
-    });
-    tList.forEach((element) {
-      var sayac = 0, totalPrice = 0.0, empty = true;
-      element.forEach((_element) {
-        if (_element.isNotEmpty) {
-          sayac++;
-          totalPrice += (_element['price'].toDouble());
-          empty = false;
-        }
-      });
-      if (!empty) {
-        sList.add(sayac);
-        pList.add(totalPrice);
-        arrayLenght++;
-      }
-    });
 
-    setState(() {
-      dimeonsion=arrayLenght;
-      tList = tList;
-      sList = sList;
-    });
-    return arrayLenght;
+      setState(() {
+        dimeonsion = arrayLenght;
+        tList = tList;
+        sList = sList;
+      });
+      return arrayLenght;
+    } else {
+      setState(() {
+        dimeonsion = 0;
+      });
+      return 0;
+    }
   }
 
   Future<void> getOrders() async {
@@ -473,6 +482,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ordersList = _ordersList;
         exp = (List.generate(ordersList.length, (index) => false));
         edit = (List.generate(ordersList.length, (index) => false));
+      });
+    } else {
+      setState(() {
+        ordersList = [];
       });
     }
   }

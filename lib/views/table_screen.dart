@@ -29,8 +29,8 @@ class _TableScreenState extends State<TableScreen> {
     super.initState();
     setState(() {});
     _contents = [
-      TableDetailScreen(
-          widget.tableModel, widget.sessionModel, widget.productAddProduct),
+     /* TableDetailScreen(
+          widget.tableModel, widget.sessionModel, widget.productAddProduct),*/
       CategoryScreen(
           widget.sessionModel, widget.tableModel, widget.productAddProduct),
       OrdersScreen(
@@ -124,10 +124,10 @@ class _TableScreenState extends State<TableScreen> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       items: [
-        BottomNavigationBarItem(
+        /*BottomNavigationBarItem(
           icon: Icon(Icons.details),
           label: "",
-        ),
+        ),*/
         BottomNavigationBarItem(
           icon: Icon(Icons.category),
           label: "",
@@ -139,7 +139,7 @@ class _TableScreenState extends State<TableScreen> {
       ],
       onTap: (int tiklananButonPozisyonNo) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        if (tiklananButonPozisyonNo != 2) {
+        if (tiklananButonPozisyonNo != 1) {
           setState(() {
             widget.activeContentNo = tiklananButonPozisyonNo;
           });

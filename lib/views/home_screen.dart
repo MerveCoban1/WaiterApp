@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState(){
     super.initState();
-    _contents=[FloorsScreen(widget.sessionModel),AllOrdersScreen()];
+    _contents=[FloorsScreen(widget.sessionModel),AllOrdersScreen(widget.sessionModel)];
   }
 
   @override

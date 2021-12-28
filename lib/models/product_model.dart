@@ -1,15 +1,21 @@
 class ProductModel {
   late String sId;
   late List<int> activeList;
-  late List<String> options;
+  late List<ProductOptions> options;
   late List<Prices> prices;
-  late String endTime;
-  late String startTime;
+  late String? endTime;
+  late String? startTime;
   late String image;
   late String branch;
   late String category;
   late String description;
   late String title;
+  late String createdAt;
+  late String updatedAt;
+  late String slug;
+  late int iV;
+  late int saleType;
+  late String stockCode;
 
   ProductModel(
       {required this.sId,
@@ -22,16 +28,27 @@ class ProductModel {
       required this.branch,
       required this.category,
       required this.description,
-      required this.title});
+      required this.title,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.slug,
+      required this.iV,
+      required this.saleType,
+      required this.stockCode});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     activeList = json['active_list'].cast<int>();
-    options = json['options'].cast<String>();
+    if (json['options'] != null) {
+      options = <ProductOptions>[];
+      json['options'].forEach((v) {
+        options.add(ProductOptions.fromJson(v));
+      });
+    }
     if (json['prices'] != null) {
       prices = <Prices>[];
       json['prices'].forEach((v) {
-        prices.add(new Prices.fromJson(v));
+        prices.add(Prices.fromJson(v));
       });
     }
     endTime = json['end_time'];
@@ -41,76 +58,68 @@ class ProductModel {
     category = json['category'];
     description = json['description'];
     title = json['title'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    slug = json['slug'];
+    iV = json['__v'];
+    saleType = json['sale_type'];
+    stockCode = json['stock_code'];
   }
+}
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['active_list'] = this.activeList;
-    data['options'] = this.options;
-    if (this.prices != null) {
-      data['prices'] = this.prices.map((v) => v.toJson()).toList();
-    }
-    data['end_time'] = this.endTime;
-    data['start_time'] = this.startTime;
-    data['image'] = this.image;
-    data['branch'] = this.branch;
-    data['category'] = this.category;
-    data['description'] = this.description;
-    data['title'] = this.title;
-    return data;
+class ActiveList {
+  late String id;
+
+  ActiveList({required this.id});
+
+  ActiveList.fromJson(Map<int, dynamic> json) {
+    id = json['id'];
+  }
+}
+
+class ProductOptions {
+  late String optionId;
+  late bool isForcedChoice;
+
+  ProductOptions({required this.optionId, required this.isForcedChoice});
+
+  ProductOptions.fromJson(Map<String, dynamic> json) {
+    optionId = json['option_id'];
+    isForcedChoice = json['is_forced_choice'];
   }
 }
 
 class Prices {
+  late List<int> orderType;
   late String sId;
   late String priceName;
   late String currency;
-  late int vatRate;
-  late int saleType;
-  late int orderType;
-  late int amount;
+  late double vatRate;
+  late double amount;
   late double price;
   late String createdAt;
   late String updatedAt;
 
   Prices(
-      {required this.sId,
+      {required this.orderType,
+      required this.sId,
       required this.priceName,
       required this.currency,
       required this.vatRate,
-      required this.saleType,
-      required this.orderType,
       required this.amount,
       required this.price,
       required this.createdAt,
       required this.updatedAt});
 
   Prices.fromJson(Map<String, dynamic> json) {
+    orderType = json['order_type'].cast<int>();
     sId = json['_id'];
     priceName = json['price_name'];
     currency = json['currency'];
-    vatRate = json['vat_rate'];
-    saleType = json['sale_type'];
-    orderType = json['order_type'];
-    amount = json['amount'];
-    price = json['price'].toDouble();
+    vatRate = double.parse(json['vat_rate'].toString());
+    amount = double.parse(json['amount'].toString());
+    price = double.parse(json['price'].toString());
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['price_name'] = this.priceName;
-    data['currency'] = this.currency;
-    data['vat_rate'] = this.vatRate;
-    data['sale_type'] = this.saleType;
-    data['order_type'] = this.orderType;
-    data['amount'] = this.amount;
-    data['price'] = this.price;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    return data;
   }
 }
